@@ -1,0 +1,177 @@
+<?php
+
+return [
+    'dashboard' => 'لوحة التحكم',
+    'home' => 'الرئيسية',
+
+    // Auth
+    'login' => 'تسجيل الدخول',
+    'logout' => 'تسجيل الخروج',
+    'register' => 'إنشاء حساب',
+    'email' => 'البريد الإلكتروني',
+    'password' => 'كلمة المرور',
+    'confirm_password' => 'تأكيد كلمة المرور',
+    'remember_me' => 'تذكرني',
+    'forgot_password' => 'نسيت كلمة المرور؟',
+    'reset_password' => 'إعادة تعيين كلمة المرور',
+    'send_reset_link' => 'إرسال رابط إعادة التعيين',
+
+    // Profile
+    'profile' => 'الملف الشخصي',
+    'update_profile' => 'تحديث الملف الشخصي',
+    'name' => 'الاسم',
+    'save' => 'حفظ',
+    'cancel' => 'إلغاء',
+    'delete' => 'حذف',
+    'edit' => 'تعديل',
+    'create' => 'إنشاء',
+    'show' => 'عرض',
+    'back' => 'رجوع',
+    'search' => 'بحث',
+    'filter' => 'تصفية',
+    'actions' => 'الإجراءات',
+    'status' => 'الحالة',
+    'active' => 'نشط',
+    'inactive' => 'غير نشط',
+    'yes' => 'نعم',
+    'no' => 'لا',
+    'true' => 'صحيح',
+    'false' => 'خطأ',
+
+    // Users
+    'users' => 'المستخدمون',
+    'user' => 'مستخدم',
+    'add_user' => 'إضافة مستخدم',
+    'edit_user' => 'تعديل مستخدم',
+    'delete_user' => 'حذف المستخدم',
+    'user_details' => 'تفاصيل المستخدم',
+    'role' => 'الدور',
+    'roles' => 'الأدوار',
+
+    // Roles & Permissions
+    'permissions' => 'الصلاحيات',
+    'permission' => 'صلاحية',
+    'all_permissions' => 'جميع الصلاحيات',
+    'assign_roles' => 'تعيين الأدوار',
+    'super_admin' => 'مدير عام',
+
+    // Branches
+    'branches' => 'الفروع',
+    'branch' => 'فرع',
+    'add_branch' => 'إضافة فرع',
+    'edit_branch' => 'تعديل الفرع',
+    'delete_branch' => 'حذف الفرع',
+    'switch_branch' => 'تبديل الفرع',
+    'current_branch' => 'الفرع الحالي',
+
+    // Settings
+    'settings' => 'الإعدادات',
+    'settings_desc' => 'إدارة ملفك الشخصي وإعدادات الحساب',
+    'appearance' => 'المظهر',
+    'dark_mode' => 'الوضع الداكن',
+    'light_mode' => 'الوضع الفاتح',
+    'system' => 'النظام',
+    'language' => 'اللغة',
+    'security' => 'الأمان',
+    'two_factor' => 'المصادقة الثنائية',
+    'enable_two_factor' => 'تفعيل المصادقة الثنائية',
+    'disable_two_factor' => 'تعطيل المصادقة الثنائية',
+    'update_profile' => 'تحديث الملف الشخصي',
+    'update_password' => 'تحديث كلمة المرور',
+    'current_password' => 'كلمة المرور الحالية',
+    'new_password' => 'كلمة المرور الجديدة',
+    'confirm_password' => 'تأكيد كلمة المرور',
+
+    // Customers
+    'customers' => 'العملاء',
+    'customer' => 'عميل',
+    'add_customer' => 'إضافة عميل',
+    'edit_customer' => 'تعديل العميل',
+    'delete_customer' => 'حذف العميل',
+
+    // Suppliers
+    'suppliers' => 'الموردون',
+    'supplier' => 'مورد',
+    'add_supplier' => 'إضافة مورد',
+    'edit_supplier' => 'تعديل المورد',
+    'delete_supplier' => 'حذف المورد',
+
+    // Representatives
+    'representatives' => 'المندوبين',
+    'representative' => 'مندوب',
+    'add_representative' => 'إضافة مندوب',
+    'edit_representative' => 'تعديل المندوب',
+    'delete_representative' => 'حذف المندوب',
+    'commission_rate' => 'نسبة العمولة',
+
+    // General Settings
+    'general_settings' => 'الإعدادات العامة',
+    'products_stocks' => 'المنتجات والمخزون',
+    'customers_suppliers' => 'العملاء والموردون',
+    'users_roles' => 'المستخدمون والأدوار',
+    'products' => 'المنتجات',
+    'stocks' => 'المخزون',
+    'units' => 'الوحدات',
+    'banks' => 'البنوك',
+    'safes' => 'الخزائن',
+    'accounting' => 'المحاسبة',
+
+    // Entity fields
+    'code' => 'الكود',
+    'address' => 'العنوان',
+    'phone' => 'الهاتف',
+    'opening_balance' => 'الرصيد الافتتاحي',
+    'account' => 'الحساب',
+
+    // Actions
+    'add' => 'إضافة',
+    'confirm_delete' => 'تأكيد الحذف',
+    'update_profile_desc' => 'قم بتحديث اسمك وعنوان بريدك الإلكتروني',
+    'email_unverified' => 'بريدك الإلكتروني غير مُفعَّل.',
+    'resend_verification' => 'إعادة إرسال رابط التحقق',
+    'verification_sent' => 'تم إرسال رابط تحقق جديد إلى بريدك الإلكتروني',
+    'update_password_desc' => 'تأكد من أن حسابك يستخدم كلمة مرور طويلة وعشوائية',
+    'appearance_desc' => 'تخصيص مظهر التطبيق',
+    'two_factor_desc' => 'إدارة إعدادات المصادقة الثنائية',
+    'two_factor_disabled_desc' => 'عند تفعيل المصادقة الثنائية، ستتم مطالبتك بإدخال رمز PIN آمن أثناء تسجيل الدخول. يمكن الحصول على هذا الرمز من تطبيق يدعم TOTP على هاتفك.',
+    'two_factor_enabled_desc' => 'عند تفعيل المصادقة الثنائية، ستتم مطالبتك بإدخال رمز PIN عشوائي وآمن أثناء تسجيل الدخول، والذي يمكنك الحصول عليه من التطبيق المدعوم على هاتفك.',
+    'continue_setup' => 'متابعة الإعداد',
+    'enabled' => 'مفعَّل',
+    'disabled' => 'معطَّل',
+    'customers_desc' => 'إدارة عملاء الشركة',
+    'suppliers_desc' => 'إدارة موردي الشركة',
+    'representatives_desc' => 'إدارة مندوبي المبيعات',
+
+    // Messages
+    'success' => 'نجاح',
+    'error' => 'خطأ',
+    'warning' => 'تحذير',
+    'info' => 'معلومات',
+    'confirm' => 'تأكيد',
+    'are_you_sure' => 'هل أنت متأكد؟',
+    'cannot_undo' => 'لا يمكن التراجع عن هذا الإجراء',
+    'saved_successfully' => 'تم الحفظ بنجاح',
+    'deleted_successfully' => 'تم الحذف بنجاح',
+    'updated_successfully' => 'تم التحديث بنجاح',
+    'error_occurred' => 'حدث خطأ',
+    'no_data' => 'لا توجد بيانات',
+    'loading' => 'جاري التحميل...',
+    'no_results' => 'لا توجد نتائج',
+
+    // Table
+    'showing' => 'عرض',
+    'of' => 'من',
+    'results' => 'نتيجة',
+    'page' => 'صفحة',
+    'previous' => 'السابق',
+    'next' => 'التالي',
+    'first' => 'الأول',
+    'last' => 'الأخير',
+
+    // Time
+    'today' => 'اليوم',
+    'yesterday' => 'أمس',
+    'this_week' => 'هذا الأسبوع',
+    'this_month' => 'هذا الشهر',
+    'this_year' => 'هذه السنة',
+];
