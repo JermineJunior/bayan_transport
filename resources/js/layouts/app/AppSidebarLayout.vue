@@ -2,11 +2,7 @@
 import { ref, computed } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import {
-    Calculator,
     Settings,
-    Shield,
-    ShoppingCart,
-    User,
     ChevronDown,
     Home,
     Menu,
@@ -85,15 +81,13 @@ const sidebarNavItems = [
     {
         title: 'الإعدادات العامة',
         icon: Settings,
-        items: [
-            { title: 'الإعدادات العامة', href: '/settings/general' },
-        ],
-    },  
+        items: [{ title: 'بيانات الموؤسسة', href: '/settings/general' }],
+    },
 ];
 
-const footerNavItems = [
+/* const footerNavItems = [
   {title: 'footnav',href:'/dashboard'}
-];
+]; */
 </script>
 
 <template>
@@ -144,7 +138,7 @@ const footerNavItems = [
 
                 <ul class="side-menu">
                     <li class="side-item side-item-category">
-                 برنامج نظام الترحيلات        
+                        برنامج نظام الترحيلات
                     </li>
 
                     <li class="slide">
@@ -191,26 +185,6 @@ const footerNavItems = [
                             </li>
                         </ul>
                     </li>
-
-                    <li class="side-item side-item-category">
-                        المستخدمين والصلاحيات
-                    </li>
-
-                    <li
-                        v-for="(item, index) in footerNavItems"
-                        :key="index"
-                        class="slide"
-                    >
-                        <Link :href="item.href" class="side-menu__item">
-                            <component
-                                :is="item.icon"
-                                class="side-menu__icon"
-                            />
-                            <span class="side-menu__label">{{
-                                item.title
-                            }}</span>
-                        </Link>
-                    </li>
                 </ul>
             </div>
         </aside>
@@ -230,31 +204,7 @@ const footerNavItems = [
 
                     <div class="main-header-right">
                         <div class="nav nav-item navbar-nav-right ml-auto">
-                            <div
-                                class="nav-link"
-                                id="bs-example-navbar-collapse-1"
-                            >
-                                <form class="navbar-form" role="search">
-                                    <div class="input-group">
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            placeholder="إبحث عن ماتريد..."
-                                        />
-                                        <span class="input-group-btn">
-                                            <button
-                                                type="submit"
-                                                class="btn btn-default nav-link resp-btn"
-                                            >
-                                                <Search
-                                                    class="header-icon-svgs"
-                                                />
-                                            </button>
-                                        </span>
-                                    </div>
-                                </form>
-                            </div>
-
+                
                             <div class="nav-item full-screen fullscreen-button">
                                 <a
                                     class="new nav-link full-screen-link"
@@ -272,7 +222,7 @@ const footerNavItems = [
                                 </a>
                             </div>
 
-                            <div class="nav-item full-screen pt-2">
+                            <div class="nav-item full-screen">
                                 <a
                                     class="new nav-link"
                                     href="#"
@@ -292,6 +242,7 @@ const footerNavItems = [
                             <!-- Profile Dropdown -->
                             <div
                                 class="dropdown main-profile-menu nav nav-item nav-link"
+                                :class="{ show: showProfileMenu }"
                                 @mouseleave="showProfileMenu = false"
                             >
                                 <a
@@ -305,7 +256,11 @@ const footerNavItems = [
                                 </a>
                                 <div
                                     class="dropdown-menu"
-                                    v-show="showProfileMenu"
+                                    :style="{
+                                        display: showProfileMenu
+                                            ? 'block'
+                                            : 'none',
+                                    }"
                                 >
                                     <div
                                         class="main-header-profile bg-primary p-3"
@@ -650,6 +605,10 @@ const footerNavItems = [
 }
 
 /* Profile Dropdown */
+.app-layout .main-profile-menu {
+    position: relative;
+}
+
 .app-layout .profile-user img {
     width: 36px;
     height: 36px;
@@ -666,11 +625,12 @@ const footerNavItems = [
     border-radius: 0.5rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     min-width: 200px;
-    display: none;
     z-index: 100;
+    padding: 0;
+    margin-top: 0.5rem;
 }
 
-.app-layout .dropdown.main-profile-menu.show .dropdown-menu {
+.app-layout .main-profile-menu.show .dropdown-menu {
     display: block;
 }
 
