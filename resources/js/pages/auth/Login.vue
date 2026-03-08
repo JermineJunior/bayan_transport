@@ -37,7 +37,7 @@ defineProps<{
             class="flex flex-col gap-6"
         >
             <div class="form-group">
-                <label>البريد الالكتروني او رقم التلفون</label>
+                <label>البريد الالكتروني او اسم المستخدم</label>
                 <Input
                     id="email"
                     type="text"
@@ -46,8 +46,8 @@ defineProps<{
                     autofocus
                     :tabindex="1"
                     autocomplete="off"
-                    placeholder="رقم الهاتف او البريد الالكتروني"
-                    class="@error('email') is-invalid @enderror"
+                    placeholder="البريد اواسم المستخدم"
+                    class="@error('email') is-invalid @enderror mt-3"
                 />
                 <InputError :message="errors.email" />
             </div>
@@ -62,7 +62,7 @@ defineProps<{
                     :tabindex="2"
                     autocomplete="current-password"
                     placeholder="من فضلك ادخل كلمة المرور"
-                    class="@error('password') is-invalid @enderror"
+                    class="@error('password') is-invalid @enderror mb-3"
                 />
                 <InputError :message="errors.password" />
 

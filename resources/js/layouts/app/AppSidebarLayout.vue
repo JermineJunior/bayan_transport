@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import {
     Settings,
@@ -13,6 +13,9 @@ import {
     Moon,
     LogOut,
     User as UserIcon,
+    Users,
+    Truck,
+    Warehouse,
 } from 'lucide-vue-next';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { dashboard, logout } from '@/routes';
@@ -36,6 +39,20 @@ const activeMenu = ref<string | null>(null);
 const isDark = ref(false);
 const showProfileMenu = ref(false);
 
+onMounted(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        isDark.value = true;
+        document.documentElement.classList.add('dark');
+    } else if (
+        !savedTheme &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches
+    ) {
+        isDark.value = true;
+        document.documentElement.classList.add('dark');
+    }
+});
+
 const toggleSidebar = () => {
     sidebarOpen.value = !sidebarOpen.value;
 };
@@ -52,6 +69,7 @@ const toggleDarkMode = () => {
     isDark.value = !isDark.value;
     if (typeof document !== 'undefined') {
         document.documentElement.classList.toggle('dark', isDark.value);
+        localStorage.setItem('theme', isDark.value ? 'dark' : 'light');
     }
 };
 
@@ -79,15 +97,26 @@ const logoUrl = computed(() => {
 
 const sidebarNavItems = [
     {
+        title: 'العملاء',
+        icon: Users,
+        items: [{ title: 'قائمة العملاء', href: '/customers' }],
+    },
+    {
+        title: 'السائقين',
+        icon: Truck,
+        items: [{ title: 'قائمة السائقين', href: '/drivers' }],
+    },
+    {
+        title: 'المستودعات',
+        icon: Warehouse,
+        items: [{ title: 'قائمة المستودعات', href: '/warehouses' }],
+    },
+    {
         title: 'الإعدادات العامة',
         icon: Settings,
         items: [{ title: 'بيانات الموؤسسة', href: '/settings/general' }],
     },
 ];
-
-/* const footerNavItems = [
-  {title: 'footnav',href:'/dashboard'}
-]; */
 </script>
 
 <template>
@@ -204,7 +233,6 @@ const sidebarNavItems = [
 
                     <div class="main-header-right">
                         <div class="nav nav-item navbar-nav-right ml-auto">
-                
                             <div class="nav-item full-screen fullscreen-button">
                                 <a
                                     class="new nav-link full-screen-link"
