@@ -35,6 +35,7 @@ class DriverController extends Controller
 
         $driver = Driver::create($validated);
 
+        // من صفحة طلبات العبور
         $redirectTo = $request->input('redirect_to');
         if ($redirectTo === 'order_create') {
             return to_route('orders.create', ['driver_id' => $driver->id]);

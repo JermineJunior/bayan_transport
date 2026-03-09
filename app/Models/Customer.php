@@ -9,7 +9,7 @@ class Customer extends Model
 {
     protected $fillable = ['name', 'phone'];
 
-    public function order():HasMany
+    public function order(): HasMany
     {
         return $this->hasMany(Order::class);
     }

@@ -29,7 +29,7 @@ return new class extends Migration
             $table->decimal('transit', 10, 2)->nullable();
             $table->decimal('window_fee', 10, 2)->nullable();
             $table->decimal('manfisto', 10, 2)->nullable();
-            $table->decimal('freightage', 10, 2)->nullable(); // النولون 
+            $table->decimal('freightage', 10, 2)->nullable(); // النولون
             $table->decimal('tax', 10, 2)->nullable();
             $table->decimal('commission', 10, 2)->nullable();
             $table->decimal('amount', 10, 2);

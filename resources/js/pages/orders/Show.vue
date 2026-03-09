@@ -296,7 +296,7 @@ const formatDateTime = (date: string) => {
                                 class="rounded-lg border border-primary bg-primary/5 p-4"
                             >
                                 <div class="text-sm text-primary">
-                                    المبلغ الإجمالي
+                                    المبلغ
                                 </div>
                                 <div class="text-2xl font-bold text-primary">
                                     {{ formatAmount(props.order.amount) }}

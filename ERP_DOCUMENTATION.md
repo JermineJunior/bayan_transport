@@ -2,9 +2,9 @@
 
 ## نظرة عامة | Overview
 
-هذا قالب ERP شامل مبني باستخدام Laravel 12, Inertia.js, Vue 3, و Tailwind CSS مع دعم كامل للـ RTL.
+هذا نظام ERP لإدارة الترحيلات والنقل مبني باستخدام Laravel 12, Inertia.js, Vue 3, و Tailwind CSS مع دعم كامل للـ RTL.
 
-This is a comprehensive ERP template built with Laravel 12, Inertia.js, Vue 3, and Tailwind CSS with full RTL support.
+This is a Transport ERP system built with Laravel 12, Inertia.js, Vue 3, and Tailwind CSS with full RTL support.
 
 ---
 
@@ -13,7 +13,7 @@ This is a comprehensive ERP template built with Laravel 12, Inertia.js, Vue 3, a
 - PHP 8.2+
 - Laravel 12
 - Node.js 18+
-- SQLite (default) or MySQL/PostgreSQL
+- MySQL/PostgreSQL (default) or SQLite
 
 ---
 
@@ -22,7 +22,7 @@ This is a comprehensive ERP template built with Laravel 12, Inertia.js, Vue 3, a
 ```bash
 # Clone the project
 git clone <repo-url>
-cd VueErp
+cd transport
 
 # Install PHP dependencies
 composer install
@@ -33,10 +33,11 @@ cp .env.example .env
 # Generate application key
 php artisan key:generate
 
+# Configure database in .env file
 # Run migrations
 php artisan migrate
 
-# Seed the database with chart of accounts
+# Seed the database with initial data
 php artisan db:seed
 
 # Install frontend dependencies
@@ -44,166 +45,55 @@ npm install
 
 # Build frontend
 npm run build
+
+# Start development server
+php artisan serve
+
+# In another terminal, run Vite
+npm run dev
 ```
+
+---
+
+## المستخدم الافتراضي | Default User
+
+بعد الـ seed، يتم إنشاء مستخدم اختبار:
+
+- **Email**: admin@example.com
+- **Password**: password
 
 ---
 
 ## هيكل المشروع | Project Structure
 
-### Models
+### النماذج | Models
 
 ```
 app/Models/
-├── User.php              # المستخدم مع دعم الأدوار والصلاحيات
-├── Branch.php            # الفروع متعددة
-├── MasterData/
-│   ├── Category.php      # التصنيفات (يمكن أن تكون متعددة المستويات)
-│   ├── Brand.php         # العلامات التجارية
-│   ├── Product.php      # المنتجات معpricing والـ stock
-│   └── Unit.php         # وحدات القياس (UOM)
-├── Entity/
-│   ├── Supplier.php     # الموردين (مرتبط بحساب محاسبي)
-│   ├── Customer.php     # العملاء (مرتبط بحساب محاسبي)
-│   └── Representative.php # المندوبين (مرتبط بحساب محاسبي)
-└── Accounting/
-    ├── Account.php      # شجرة الحسابات (4 مستويات)
-    ├── Invoice.php      # فواتير المبيعات/المشتريات
-    ├── InvoiceItem.php  # بنود الفاتورة
-    ├── JournalEntry.php # القيود المحاسبية
-    └── JournalLine.php  # سطور القيد
+├── User.php              # المستخدم مع دعم المصادقة
+├── Customer.php         # العملاء
+├── Driver.php          # السائقين
+├── Warehouse.php       # المستودعات
+└── Order.php          # طلبات الترحيل
 ```
 
-### Services
+###\Controllers
 
 ```
-app/Services/
-├── AccountingService.php  # خدمات المحاسبة
-│   ├── createAccountForEntity() - إنشاء حساب جديد لكيان
-│   ├── getAccountTree() - الحصول على شجرة الحسابات
-│   └── getAccountsByType() - الحصول على الحسابات حسب النوع
-│
-└── InvoiceService.php    # خدمات الفواتير
-    ├── createInvoice() - إنشاء فاتورة
-    └── confirmInvoice() - تأكيد الفاتورة وإنشاء قيد محاسبي
+app/Http/Controllers/
+├── DashboardController.php    # لوحة التحكم
+├── CustomerController.php     # إدارة العملاء
+├── DriverController.php      # إدارة السائقين
+├── WarehouseController.php   # إدارة المستودعات
+└── OrderController.php      # إدارة الطلبات
 ```
 
-### Traits
+### Form Requests
 
 ```
-app/Traits/
-└── BelongsToBranch.php  # Trait للـ automatic branch scoping
-    ├── bootBelongsToBranch() - تعيين branch_id تلقائياً
-    └── scopeAllowedBranches() - تصفية الاستعلامات حسب الفرع
-```
-
-### Middleware
-
-```
-app/Http/Middleware/
-└── ActiveBranch.php      # إدارة الفرع النشط في الجلسة
-```
-
----
-
-## شجرة الحسابات | Chart of Accounts
-
-### المستويات | Levels
-
-1. **المستوى 1** - الأصول، الخصوم، حقوق الملكية، الإيرادات، المصروفات
-2. **المستوى 2** - التصنيفات الرئيسية (مثل: الأصول المتداولة)
-3. **المستوى 3** - الحسابات الفرعية (مثل: النقدية، البنك، العملاء)
-4. **المستوى 4** - الحسابات التفصيلية (تُنشأ تلقائياً للكيانات)
-
-### أكواد الحسابات | Account Codes
-
-```
-1xxxx - الأصول (Assets)
-  11xx - الأصول المتداولة
-    1101 - النقدية
-    1102 - البنك
-    1103 - العملاء
-    1104 - المخزون
-  12xx - الأصول الثابتة
-
-2xxxx - الخصوم (Liabilities)
-  21xx - الخصوم المتداولة
-    2101 - الموردين
-  22xx - الخصوم طويلة الأجل
-
-3xxxx - حقوق الملكية (Equity)
-  31xx - رأس المال
-  32xx - الأرباح المحتجزة
-
-4xxxx - الإيرادات (Revenue)
-  41xx - إيرادات المبيعات
-  42xx - إيرادات أخرى
-
-5xxxx - المصروفات (Expenses)
-  51xx - تكلفة البضاعة المباعة
-  52xx - المصروفات التشغيلية
-  53xx - المصروفات المالية
-```
-
----
-
-## نظام الفواتير | Invoice System
-
-### أنواع الفواتير | Invoice Types
-
-- `sale` - فاتورة مبيعات
-- `purchase` - فاتورة مشتريات
-- `sale_return` - مردودات مبيعات
-- `purchase_return` - مردودات مشتريات
-
-### العمليات | Workflow
-
-1. **إنشاء فاتورة** - Create Invoice
-
-```php
-$invoiceService = app(InvoiceService::class);
-
-$invoice = $invoiceService->createInvoice([
-    'type' => 'sale',
-    'customer_id' => 1,
-    'invoice_date' => now(),
-    'discount_percentage' => 10,
-    'tax_percentage' => 15,
-    'items' => [
-        [
-            'product_id' => 1,
-            'quantity' => 10,
-            'unit_price' => 100,
-        ]
-    ]
-]);
-```
-
-2. **تأكيد الفاتورة** - Confirm Invoice (يُنشئ قيد محاسبي تلقائياً)
-
-```php
-$journalEntry = $invoiceService->confirmInvoice($invoice);
-```
-
----
-
-## إنشاء حساب لكيان | Create Account for Entity
-
-```php
-$accountingService = app(AccountingService::class);
-
-// إنشاء حساب عميل
-$customerAccount = $accountingService->createAccountForEntity(
-    '1103',  // parent account code
-    'Customer Name',
-    'اسم العميل'  // Arabic name (optional)
-);
-
-// إنشاء حساب مورد
-$supplierAccount = $accountingService->createAccountForEntity(
-    '2101',  // parent account code
-    'Supplier Name',
-    'اسم المورد'
-);
+app/Http/Requests/
+├── StoreOrderRequest.php    # التحقق من إنشاء طلب
+└── UpdateOrderRequest.php  # التحقق من تحديث طلب
 ```
 
 ---
@@ -214,28 +104,122 @@ $supplierAccount = $accountingService->createAccountForEntity(
 
 ```
 resources/js/pages/
-├── admin/
-│   ├── roles/Index.vue    # إدارة الأدوار والصلاحيات
-│   ├── users/Index.vue    # إدارة المستخدمين
-│   └── branches/Index.vue # إدارة الفروع
+├── Dashboard.vue              # لوحة التحكم
+├── customers/
+│   ├── Index.vue           # قائمة العملاء
+│   ├── Create.vue          # إضافة عميل
+│   ├── Edit.vue           # تعديل عميل
+│   └── Show.vue           # عرض تفاصيل العميل
+├── drivers/
+│   ├── Index.vue           # قائمة السائقين
+│   ├── Create.vue          # إضافة سائق
+│   ├── Edit.vue           # تعديل سائق
+│   └── Show.vue           # عرض تفاصيل السائق
+├── warehouses/
+│   ├── Index.vue          # قائمة المستودعات
+│   ├── Create.vue         # إضافة مستودع
+│   ├── Edit.vue          # تعديل مستودع
+│   └── Show.vue          # عرض تفاصيل المستودع
+└── orders/
+    ├── Index.vue          # قائمة الطلبات مع الترتيب
+    ├── Create.vue         # إضافة طلب
+    ├── Edit.vue          # تعديل طلب
+    ├── Show.vue         # عرض تفاصيل الطلب
+    └── partials/        # مكونات الوحدة
+        ├── OrderInfoSection.vue      # معلومات الطلب
+        ├── OrderPartiesSection.vue   # الأطراف (عميل، سائق، مستودع)
+        ├── OrderAmountsSection.vue  # المبالغ والرسوم
+        └── SelectWithAdd.vue        # اختيار مع إضافة سريعة
 ```
 
 ### المكونات | Components
 
 ```
 resources/js/components/
-├── BranchSwitcher.vue     # مكون تغيير الفرع
-└── AppSidebar.vue        # القائمة الجانبية المحدثة
+├── ToastContainer.vue     # عرض الإشعارات
+└── ui/                  # مكونات UI
+```
+
+### Layouts
+
+```
+resources/js/layouts/
+├── AppLayout.vue              # Layout الرئيسي
+└── app/
+    └── AppSidebarLayout.vue  # Layout مع الشريط الجانبي
 ```
 
 ---
 
-## المستخدم الافتراضي | Default User
+## المميزات | Features
 
-بعد الـ seed، يتم إنشاء مستخدم اختبار:
+### 1. إدارة العملاء | Customer Management
 
-- **Email**: test@example.com
-- **Password**: password
+- إضافة/تعديل/حذف العملاء
+- عرض تفاصيل العميل
+- تخزين اسم العميل ورقم الهاتف
+
+### 2. إدارة السائقين | Driver Management
+
+- إضافة/تعديل/حذف السائقين
+- عرض تفاصيل السائق
+- تخزين اسم السائق ورقم الهاتف
+
+### 3. إدارة المستودعات | Warehouse Management
+
+- إضافة/تعديل/حذف المستودعات
+- تفعيل/إلغاء المستودع
+- عرض قائمة المستودعات النشطة فقط في نماذج الطلبات
+
+### 4. إدارة الطلبات | Order Management
+
+- إنشاء رقم طلب تلقائي
+- إضافة/تعديل/حذف الطلبات
+- ترتيب الجدول حسب أي حقل
+- عرض جميع حقول الطلب في الجدول
+- نموذج مقسم إلى أقسام:
+    - معلومات الطلب (التاريخ، رقم السيارة، الشركة، الوجهة)
+    - الأطراف (العميل، السائق، المستودع)
+    - المبالغ (الجاز، البنزين، الطوف، العبور، إلخ)
+
+### 5. إضافة سريعة | Quick Add
+
+- في نموذج الطلب، يمكن إضافة عميل/سائق/مستودع جديد بسرعة
+- بعد الإضافة، يتم التوجيه إلى صفحة الإنشاء مع تحديد القيمة الجديدة
+
+### 6. الإشعارات | Toast Notifications
+
+- إشعارات نجاح/خطأ عند عمليات الإنشاء والتحديث والحذف
+- عرض تلقائي مع إمكانية الإغلاق اليدوي
+
+### 7. التحقق | Validation
+
+- التحقق من البيانات في جانب الخادم (Form Requests)
+- عرض أخطاء التحقق تحت الحقول في النماذج
+
+### 8. لوحة التحكم | Dashboard
+
+- عرض إحصائيات:
+    - طلبات الشهر الحالي
+    - إجمالي الطلبات
+    - عدد السائقين
+    - عدد المستودعات
+
+---
+
+## تنسيق الأرقام | Number Formatting
+
+- إدخال الأرقام: można wpisywać normalnie
+- عرض الأرقام: `1,234,567.00` (تنسيق أمريكي)
+- تحويل تلقائي عند مغادرة الحقل
+
+---
+
+## ترتيب الجدول | Table Sorting
+
+- النقر على رأس العمود للترتيب
+- دعم الترتيب تصاعدياً وتنازلياً
+- حفظ حالة الترتيب في URL
 
 ---
 
@@ -248,27 +232,33 @@ php artisan serve
 # تشغيل السيرفر مع Vite
 npm run dev
 
+# بناء الواجهة
+npm run build
+
 # تشغيل الاختبارات
 php artisan test
 
-# تنسيق الكود
-vendor/bin/pint --format agent
+# تنسيق الكود PHP
+vendor/bin/pint --format
 
 # عرض الجداول
 php artisan tinker
 
-# التحقق من الراوت
+# عرض الراوت
 php artisan route:list
+
+# عرض الراوت مع URLs
+php artisan route:list --path=orders
 ```
 
 ---
 
 ## ملاحظات | Notes
 
-1. **الـ Branch Scoping**: جميع النماذج تستخدم `BelongsToBranch` trait الذي يضيف `branch_id` تلقائياً
-2. **الـ RTL**: الـ layout يدعم RTL بالكامل مع `dir="rtl"`
-3. **bcmath**: العمليات الحسابية المالية تستخدم Decimal types
-4. **Spatie Permissions**: تم إعداد الأدوار والصلاحيات مسبقاً
+1. **الـ RTL**: الـ layout يدعم RTL بالكامل
+2. **localStorage**: حالة الشريط الجانبي يتم حفظها في localStorage
+3. **Inertia.js**: يستخدم للنقل بين الصفحات بدون إعادة تحميل
+4. **Tailwind CSS v4**: يستخدم للتنسيق
 
 ---
 

@@ -35,6 +35,7 @@ class WarehouseController extends Controller
 
         $warehouse = Warehouse::create($validated);
 
+        // من صفحة طلبات العبور
         $redirectTo = $request->input('redirect_to');
         if ($redirectTo === 'order_create') {
             return to_route('orders.create', ['warehouse_id' => $warehouse->id]);
