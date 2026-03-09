@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import {
     Settings,
@@ -13,28 +13,49 @@ import {
     Moon,
     LogOut,
     User as UserIcon,
-    Users,
+    BookKey,
     Truck,
-    Warehouse,
 } from 'lucide-vue-next';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { dashboard, logout } from '@/routes';
 import { edit as profileEdit } from '@/routes/profile';
 import type { BreadcrumbItem } from '@/types';
+import { title } from 'process';
 
 type Props = {
     breadcrumbs?: BreadcrumbItem[];
+    sidebarOpen?: boolean | null;
 };
 
 const props = withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
+    sidebarOpen: null,
 });
 
 const page = usePage();
 const generalSettings = computed(() => page.props.generalSettings || {});
 const auth = computed(() => page.props.auth || {});
 
-const sidebarOpen = ref(false);
+const storedSidebar = localStorage.getItem('sidebarOpen');
+const defaultOpen = storedSidebar ? storedSidebar === 'true' : true;
+
+const sidebarOpen = ref(
+    props.sidebarOpen !== null ? props.sidebarOpen : defaultOpen,
+);
+
+watch(
+    () => props.sidebarOpen,
+    (newVal) => {
+        if (newVal !== null) {
+            sidebarOpen.value = newVal;
+            localStorage.setItem('sidebarOpen', String(newVal));
+        }
+    },
+);
+
+watch(sidebarOpen, (newVal) => {
+    localStorage.setItem('sidebarOpen', String(newVal));
+});
 const activeMenu = ref<string | null>(null);
 const isDark = ref(false);
 const showProfileMenu = ref(false);
@@ -97,19 +118,18 @@ const logoUrl = computed(() => {
 
 const sidebarNavItems = [
     {
-        title: 'العملاء',
-        icon: Users,
-        items: [{ title: 'قائمة العملاء', href: '/customers' }],
+        title: 'البيانات الاولية',
+        icon: BookKey,
+        items: [
+            { title: 'قائمة العملاء', href: '/customers' },
+            { title: 'قائمة السائقين', href: '/drivers' },
+            { title: 'قائمة المستودعات', href: '/warehouses' },
+        ],
     },
     {
-        title: 'السائقين',
+        title: 'الترحيلات',
         icon: Truck,
-        items: [{ title: 'قائمة السائقين', href: '/drivers' }],
-    },
-    {
-        title: 'المستودعات',
-        icon: Warehouse,
-        items: [{ title: 'قائمة المستودعات', href: '/warehouses' }],
+        items: [{ title: 'قائمة الترحيلات', href: '/orders' }],
     },
     {
         title: 'الإعدادات العامة',

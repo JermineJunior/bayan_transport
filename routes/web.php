@@ -24,11 +24,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::resource('users', UserController::class)->names('users');
 });
 
-Route::prefix('/admin')->middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('customers', CustomerController::class)->names('customers');
     Route::resource('drivers', DriverController::class)->names('drivers');
     Route::resource('warehouses', WarehouseController::class)->names('warehouses');
-    Route::resource('order',OrderController::class)->names('orders');
+    Route::resource('orders',OrderController::class)->names('orders');
 });
 
 Route::middleware(['auth', 'verified'])->prefix('settings')->group(function () {

@@ -10,6 +10,44 @@ class Order extends Model
 {
     protected $guarded = ['id'];
 
+    protected $fillable = [
+        'date',
+        'order_number',
+        'customer_id',
+        'driver_id',
+        'warehouse_id',
+        'car_number',
+        'gasoline',
+        'benzin',
+        'fleet',
+        'transit',
+        'window_fee',
+        'manfisto',
+        'freightage',
+        'tax',
+        'commission',
+        'amount',
+        'company',
+        'destination',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'date' => 'date',
+            'gasoline' => 'decimal:2',
+            'benzin' => 'decimal:2',
+            'fleet' => 'decimal:2',
+            'transit' => 'decimal:2',
+            'window_fee' => 'decimal:2',
+            'manfisto' => 'decimal:2',
+            'freightage' => 'decimal:2',
+            'tax' => 'decimal:2',
+            'commission' => 'decimal:2',
+            'amount' => 'decimal:2',
+        ];
+    }
+
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
@@ -36,7 +74,7 @@ class Order extends Model
             ->first();
 
         if ($last) {
-            $sequence = intval(substr($last->transport_number, -5)) + 1;
+            $sequence = intval(substr($last->order_number, -5)) + 1;
         } else {
             $sequence = 1;
         }
