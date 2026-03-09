@@ -138,8 +138,17 @@ const deleteWarehouse = (id: number) => {
                                     v-model="form.name"
                                     required
                                     class="mt-1.5"
+                                    :class="{
+                                        'border-red-500': form.errors.name,
+                                    }"
                                     placeholder="أدخل اسم المستودع"
                                 />
+                                <p
+                                    v-if="form.errors.name"
+                                    class="mt-1 text-sm text-red-500"
+                                >
+                                    {{ form.errors.name }}
+                                </p>
                             </div>
                             <div class="flex items-center gap-2">
                                 <input

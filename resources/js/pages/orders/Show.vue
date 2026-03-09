@@ -60,22 +60,23 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('ar-SA', {
+    return new Date(date).toLocaleDateString('en-GB', {
         year: 'numeric',
-        month: 'long',
-        day: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
     });
 };
 
-const formatAmount = (amount: number) => {
-    return new Intl.NumberFormat('ar-SA', {
-        style: 'currency',
-        currency: 'SAR',
+const formatAmount = (amount: number | null) => {
+    if (amount === null || amount === undefined) return '-';
+    return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
     }).format(amount);
 };
 
 const formatDateTime = (date: string) => {
-    return new Date(date).toLocaleString('ar-SA', {
+    return new Date(date).toLocaleString('en-GB', {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
@@ -86,7 +87,7 @@ const formatDateTime = (date: string) => {
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbs">
+    <AppLayout :breadcrumbs="breadcrumbs" :sidebar-open="false">
         <div class="space-y-6 p-6">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-4">
@@ -221,36 +222,34 @@ const formatDateTime = (date: string) => {
                         >
                             <div class="rounded-lg border p-4">
                                 <div class="text-sm text-muted-foreground">
+                                    الجاز
+                                </div>
+                                <div class="text-lg font-medium">
+                                    {{ formatAmount(props.order.gasoline) }}
+                                </div>
+                            </div>
+                            <div class="rounded-lg border p-4">
+                                <div class="text-sm text-muted-foreground">
                                     البنزين
                                 </div>
                                 <div class="text-lg font-medium">
-                                    {{
-                                        formatAmount(props.order.gasoline || 0)
-                                    }}
+                                    {{ formatAmount(props.order.benzin) }}
                                 </div>
                             </div>
                             <div class="rounded-lg border p-4">
                                 <div class="text-sm text-muted-foreground">
-                                    البنزين (2)
+                                    الطوف
                                 </div>
                                 <div class="text-lg font-medium">
-                                    {{ formatAmount(props.order.benzin || 0) }}
+                                    {{ formatAmount(props.order.fleet) }}
                                 </div>
                             </div>
                             <div class="rounded-lg border p-4">
                                 <div class="text-sm text-muted-foreground">
-                                    الأسطول
+                                    العبور
                                 </div>
                                 <div class="text-lg font-medium">
-                                    {{ formatAmount(props.order.fleet || 0) }}
-                                </div>
-                            </div>
-                            <div class="rounded-lg border p-4">
-                                <div class="text-sm text-muted-foreground">
-                                    الترانزيت
-                                </div>
-                                <div class="text-lg font-medium">
-                                    {{ formatAmount(props.order.transit || 0) }}
+                                    {{ formatAmount(props.order.transit) }}
                                 </div>
                             </div>
                             <div class="rounded-lg border p-4">
@@ -258,11 +257,7 @@ const formatDateTime = (date: string) => {
                                     رسوم النافذة
                                 </div>
                                 <div class="text-lg font-medium">
-                                    {{
-                                        formatAmount(
-                                            props.order.window_fee || 0,
-                                        )
-                                    }}
+                                    {{ formatAmount(props.order.window_fee) }}
                                 </div>
                             </div>
                             <div class="rounded-lg border p-4">
@@ -270,9 +265,7 @@ const formatDateTime = (date: string) => {
                                     المنفيستو
                                 </div>
                                 <div class="text-lg font-medium">
-                                    {{
-                                        formatAmount(props.order.manfisto || 0)
-                                    }}
+                                    {{ formatAmount(props.order.manfisto) }}
                                 </div>
                             </div>
                             <div class="rounded-lg border p-4">
@@ -280,11 +273,7 @@ const formatDateTime = (date: string) => {
                                     النولون
                                 </div>
                                 <div class="text-lg font-medium">
-                                    {{
-                                        formatAmount(
-                                            props.order.freightage || 0,
-                                        )
-                                    }}
+                                    {{ formatAmount(props.order.freightage) }}
                                 </div>
                             </div>
                             <div class="rounded-lg border p-4">
@@ -292,7 +281,7 @@ const formatDateTime = (date: string) => {
                                     الضريبة
                                 </div>
                                 <div class="text-lg font-medium">
-                                    {{ formatAmount(props.order.tax || 0) }}
+                                    {{ formatAmount(props.order.tax) }}
                                 </div>
                             </div>
                             <div class="rounded-lg border p-4">
@@ -300,11 +289,7 @@ const formatDateTime = (date: string) => {
                                     العمولة
                                 </div>
                                 <div class="text-lg font-medium">
-                                    {{
-                                        formatAmount(
-                                            props.order.commission || 0,
-                                        )
-                                    }}
+                                    {{ formatAmount(props.order.commission) }}
                                 </div>
                             </div>
                             <div

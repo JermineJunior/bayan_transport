@@ -33,9 +33,14 @@ class WarehouseController extends Controller
             'is_active' => ['nullable', 'boolean'],
         ]);
 
-        Warehouse::create($validated);
+        $warehouse = Warehouse::create($validated);
 
-        return to_route('warehouses.index');
+        $redirectTo = $request->input('redirect_to');
+        if ($redirectTo === 'order_create') {
+            return to_route('orders.create', ['warehouse_id' => $warehouse->id]);
+        }
+
+        return to_route('warehouses.index')->with('success', 'تم إضافة المستودع بنجاح');
     }
 
     public function update(Request $request, Warehouse $warehouse): RedirectResponse
@@ -47,13 +52,13 @@ class WarehouseController extends Controller
 
         $warehouse->update($validated);
 
-        return to_route('warehouses.index');
+        return to_route('warehouses.index')->with('success', 'تم تحديث المستودع بنجاح');
     }
 
     public function destroy(Warehouse $warehouse): RedirectResponse
     {
         $warehouse->delete();
 
-        return to_route('warehouses.index');
+        return to_route('warehouses.index')->with('success', 'تم حذف المستودع بنجاح');
     }
 }

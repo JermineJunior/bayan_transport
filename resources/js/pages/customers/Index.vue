@@ -131,8 +131,17 @@ const deleteCustomer = (id: number) => {
                                     v-model="form.name"
                                     required
                                     class="mt-1.5"
+                                    :class="{
+                                        'border-red-500': form.errors.name,
+                                    }"
                                     placeholder="أدخل اسم العميل"
                                 />
+                                <p
+                                    v-if="form.errors.name"
+                                    class="mt-1 text-sm text-red-500"
+                                >
+                                    {{ form.errors.name }}
+                                </p>
                             </div>
                             <div>
                                 <Label for="phone">رقم الهاتف</Label>
@@ -140,8 +149,17 @@ const deleteCustomer = (id: number) => {
                                     id="phone"
                                     v-model="form.phone"
                                     class="mt-1.5"
+                                    :class="{
+                                        'border-red-500': form.errors.phone,
+                                    }"
                                     placeholder="أدخل رقم الهاتف"
                                 />
+                                <p
+                                    v-if="form.errors.phone"
+                                    class="mt-1 text-sm text-red-500"
+                                >
+                                    {{ form.errors.phone }}
+                                </p>
                             </div>
                             <DialogFooter class="gap-2">
                                 <DialogClose as-child>

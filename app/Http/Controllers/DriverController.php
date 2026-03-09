@@ -33,9 +33,14 @@ class DriverController extends Controller
             'phone' => ['nullable', 'string', 'max:20'],
         ]);
 
-        Driver::create($validated);
+        $driver = Driver::create($validated);
 
-        return to_route('drivers.index');
+        $redirectTo = $request->input('redirect_to');
+        if ($redirectTo === 'order_create') {
+            return to_route('orders.create', ['driver_id' => $driver->id]);
+        }
+
+        return to_route('drivers.index')->with('success', 'تم إضافة السائق بنجاح');
     }
 
     public function update(Request $request, Driver $driver): RedirectResponse
@@ -47,13 +52,13 @@ class DriverController extends Controller
 
         $driver->update($validated);
 
-        return to_route('drivers.index');
+        return to_route('drivers.index')->with('success', 'تم تحديث السائق بنجاح');
     }
 
     public function destroy(Driver $driver): RedirectResponse
     {
         $driver->delete();
 
-        return to_route('drivers.index');
+        return to_route('drivers.index')->with('success', 'تم حذف السائق بنجاح');
     }
 }

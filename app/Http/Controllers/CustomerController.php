@@ -33,9 +33,14 @@ class CustomerController extends Controller
             'phone' => ['nullable', 'string', 'max:20'],
         ]);
 
-        Customer::create($validated);
+        $customer = Customer::create($validated);
+        // من صفحة طلبات العبور
+        $redirectTo = $request->input('redirect_to');
+        if ($redirectTo === 'order_create') {
+            return to_route('orders.create', ['customer_id' => $customer->id]);
+        }
 
-        return to_route('customers.index');
+        return to_route('customers.index')->with('success', 'تم إضافة العميل بنجاح');
     }
 
     public function update(Request $request, Customer $customer): RedirectResponse
@@ -47,13 +52,13 @@ class CustomerController extends Controller
 
         $customer->update($validated);
 
-        return to_route('customers.index');
+        return to_route('customers.index')->with('success', 'تم تحديث العميل بنجاح');
     }
 
     public function destroy(Customer $customer): RedirectResponse
     {
         $customer->delete();
 
-        return to_route('customers.index');
+        return to_route('customers.index')->with('success', 'تم حذف العميل بنجاح');
     }
 }

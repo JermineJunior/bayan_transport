@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreOrderRequest;
+use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Customer;
 use App\Models\Driver;
 use App\Models\Order;
@@ -48,7 +50,7 @@ class OrderController extends Controller
         ]);
     }
 
-    public function create(): Response
+    public function create(Request $request): Response
     {
         $orderNumber = Order::generateOrderNumber();
 
@@ -61,35 +63,19 @@ class OrderController extends Controller
             'customers' => $customers,
             'drivers' => $drivers,
             'warehouses' => $warehouses,
+            'selectedCustomer' => $request->query('customer_id'),
+            'selectedDriver' => $request->query('driver_id'),
+            'selectedWarehouse' => $request->query('warehouse_id'),
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreOrderRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'date' => ['required', 'date'],
-            'order_number' => ['required', 'string', 'max:255', 'unique:orders,order_number'],
-            'customer_id' => ['nullable', 'exists:customers,id'],
-            'driver_id' => ['required', 'exists:drivers,id'],
-            'warehouse_id' => ['nullable', 'exists:warehouses,id'],
-            'car_number' => ['required', 'string', 'max:255'],
-            'gasoline' => ['nullable', 'numeric', 'min:0'],
-            'benzin' => ['nullable', 'numeric', 'min:0'],
-            'fleet' => ['nullable', 'numeric', 'min:0'],
-            'transit' => ['nullable', 'numeric', 'min:0'],
-            'window_fee' => ['nullable', 'numeric', 'min:0'],
-            'manfisto' => ['nullable', 'numeric', 'min:0'],
-            'freightage' => ['nullable', 'numeric', 'min:0'],
-            'tax' => ['nullable', 'numeric', 'min:0'],
-            'commission' => ['nullable', 'numeric', 'min:0'],
-            'amount' => ['required', 'numeric', 'min:0'],
-            'company' => ['nullable', 'string', 'max:255'],
-            'destination' => ['nullable', 'string', 'max:255'],
-        ]);
+        $validated = $request->validated();
 
         Order::create($validated);
 
-        return to_route('orders.index');
+        return to_route('orders.index')->with('success', 'تم إنشاء الطلب بنجاح');
     }
 
     public function show(Order $order): Response
@@ -117,38 +103,19 @@ class OrderController extends Controller
         ]);
     }
 
-    public function update(Request $request, Order $order): RedirectResponse
+    public function update(UpdateOrderRequest $request, Order $order): RedirectResponse
     {
-        $validated = $request->validate([
-            'date' => ['required', 'date'],
-            'order_number' => ['required', 'string', 'max:255', 'unique:orders,order_number,'.$order->id],
-            'customer_id' => ['nullable', 'exists:customers,id'],
-            'driver_id' => ['required', 'exists:drivers,id'],
-            'warehouse_id' => ['nullable', 'exists:warehouses,id'],
-            'car_number' => ['required', 'string', 'max:255'],
-            'gasoline' => ['nullable', 'numeric', 'min:0'],
-            'benzin' => ['nullable', 'numeric', 'min:0'],
-            'fleet' => ['nullable', 'numeric', 'min:0'],
-            'transit' => ['nullable', 'numeric', 'min:0'],
-            'window_fee' => ['nullable', 'numeric', 'min:0'],
-            'manfisto' => ['nullable', 'numeric', 'min:0'],
-            'freightage' => ['nullable', 'numeric', 'min:0'],
-            'tax' => ['nullable', 'numeric', 'min:0'],
-            'commission' => ['nullable', 'numeric', 'min:0'],
-            'amount' => ['required', 'numeric', 'min:0'],
-            'company' => ['nullable', 'string', 'max:255'],
-            'destination' => ['nullable', 'string', 'max:255'],
-        ]);
+        $validated = $request->validated();
 
         $order->update($validated);
 
-        return to_route('orders.index');
+        return to_route('orders.index')->with('success', 'تم تحديث الطلب بنجاح');
     }
 
     public function destroy(Order $order): RedirectResponse
     {
         $order->delete();
 
-        return to_route('orders.index');
+        return to_route('orders.index')->with('success', 'تم حذف الطلب بنجاح');
     }
 }

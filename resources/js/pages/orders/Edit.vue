@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import type { BreadcrumbItem } from '@/types';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Button } from '@/components/ui/button';
@@ -71,23 +71,37 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'تعديل الطلب', href: `/orders/${props.order.id}/edit` },
 ];
 
+const formatNumber = (value: number | null) => {
+    if (value === null || value === undefined) return '';
+    return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    }).format(value);
+};
+
+const formatDateForInput = (date: string) => {
+    if (!date) return '';
+    const d = new Date(date);
+    return d.toISOString().split('T')[0];
+};
+
 const form = useForm({
-    date: props.order.date,
+    date: formatDateForInput(props.order.date),
     order_number: props.order.order_number,
     customer_id: props.order.customer_id ?? '',
     driver_id: props.order.driver_id ?? '',
     warehouse_id: props.order.warehouse_id ?? '',
     car_number: props.order.car_number,
-    gasoline: props.order.gasoline ?? '',
-    benzin: props.order.benzin ?? '',
-    fleet: props.order.fleet ?? '',
-    transit: props.order.transit ?? '',
-    window_fee: props.order.window_fee ?? '',
-    manfisto: props.order.manfisto ?? '',
-    freightage: props.order.freightage ?? '',
-    tax: props.order.tax ?? '',
-    commission: props.order.commission ?? '',
-    amount: props.order.amount,
+    gasoline: formatNumber(props.order.gasoline),
+    benzin: formatNumber(props.order.benzin),
+    fleet: formatNumber(props.order.fleet),
+    transit: formatNumber(props.order.transit),
+    window_fee: formatNumber(props.order.window_fee),
+    manfisto: formatNumber(props.order.manfisto),
+    freightage: formatNumber(props.order.freightage),
+    tax: formatNumber(props.order.tax),
+    commission: formatNumber(props.order.commission),
+    amount: formatNumber(props.order.amount),
     company: props.order.company ?? '',
     destination: props.order.destination ?? '',
 });
@@ -96,12 +110,59 @@ const customerDialogOpen = ref(false);
 const driverDialogOpen = ref(false);
 const warehouseDialogOpen = ref(false);
 
-const customerForm = useForm({ name: '', phone: '' });
-const driverForm = useForm({ name: '', phone: '' });
-const warehouseForm = useForm({ name: '', is_active: true });
+const customerForm = useForm({ name: '', phone: '', redirect_to: '' });
+const driverForm = useForm({ name: '', phone: '', redirect_to: '' });
+const warehouseForm = useForm({ name: '', is_active: true, redirect_to: '' });
+
+const handleAmountBlur = (field: string, event: Event) => {
+    const target = event.target as HTMLInputElement;
+    let value = target.value.replace(/,/g, '');
+    if (value) {
+        const num = parseFloat(value);
+        if (!isNaN(num)) {
+            form[field] = new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            }).format(num);
+        }
+    } else {
+        form[field] = '';
+    }
+};
+
+const handleAmountFocus = (field: string, event: Event) => {
+    const target = event.target as HTMLInputElement;
+    if (form[field]) {
+        target.value = form[field].toString().replace(/,/g, '');
+    }
+};
 
 const submit = () => {
-    form.put(`/orders/${props.order.id}`, {
+    const amountFields = [
+        'gasoline',
+        'benzin',
+        'fleet',
+        'transit',
+        'window_fee',
+        'manfisto',
+        'freightage',
+        'tax',
+        'commission',
+        'amount',
+    ];
+
+    const processedData: Record<string, any> = {};
+
+    Object.keys(form.data()).forEach((key) => {
+        const value = form.data()[key];
+        if (amountFields.includes(key) && value) {
+            processedData[key] = parseFloat(value.toString().replace(/,/g, ''));
+        } else {
+            processedData[key] = value;
+        }
+    });
+
+    form.transform((data) => processedData).put(`/orders/${props.order.id}`, {
         onSuccess: () => {
             // Success
         },
@@ -112,7 +173,6 @@ const saveCustomer = () => {
     customerForm.post('/customers', {
         onSuccess: () => {
             customerDialogOpen.value = false;
-            window.location.reload();
         },
     });
 };
@@ -121,7 +181,6 @@ const saveDriver = () => {
     driverForm.post('/drivers', {
         onSuccess: () => {
             driverDialogOpen.value = false;
-            window.location.reload();
         },
     });
 };
@@ -130,14 +189,13 @@ const saveWarehouse = () => {
     warehouseForm.post('/warehouses', {
         onSuccess: () => {
             warehouseDialogOpen.value = false;
-            window.location.reload();
         },
     });
 };
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbs">
+    <AppLayout :breadcrumbs="breadcrumbs" :sidebar-open="false">
         <div class="space-y-6 p-6">
             <div class="flex items-center gap-4">
                 <Link href="/orders">
@@ -171,7 +229,16 @@ const saveWarehouse = () => {
                                     type="date"
                                     required
                                     class="mt-1.5"
+                                    :class="{
+                                        'border-red-500': form.errors.date,
+                                    }"
                                 />
+                                <p
+                                    v-if="form.errors.date"
+                                    class="mt-1 text-sm text-red-500"
+                                >
+                                    {{ form.errors.date }}
+                                </p>
                             </div>
                             <div>
                                 <Label for="car_number">رقم السيارة</Label>
@@ -180,8 +247,18 @@ const saveWarehouse = () => {
                                     v-model="form.car_number"
                                     required
                                     class="mt-1.5"
+                                    :class="{
+                                        'border-red-500':
+                                            form.errors.car_number,
+                                    }"
                                     placeholder="أدخل رقم السيارة"
                                 />
+                                <p
+                                    v-if="form.errors.car_number"
+                                    class="mt-1 text-sm text-red-500"
+                                >
+                                    {{ form.errors.car_number }}
+                                </p>
                             </div>
                             <div>
                                 <Label for="company">الشركة</Label>
@@ -216,11 +293,11 @@ const saveWarehouse = () => {
                         <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
                             <div>
                                 <Label for="customer_id">العميل</Label>
-                                <div class="relative mt-1.5">
+                                <div class="mt-1.5 flex items-center gap-2">
                                     <select
                                         id="customer_id"
                                         v-model="form.customer_id"
-                                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                        class="flex h-10 flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                     >
                                         <option value="">اختر العميل</option>
                                         <option
@@ -236,8 +313,8 @@ const saveWarehouse = () => {
                                             <Button
                                                 type="button"
                                                 size="icon"
-                                                variant="ghost"
-                                                class="absolute top-1/2 left-8 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                                variant="outline"
+                                                class="h-10 w-10 flex-shrink-0"
                                             >
                                                 <Plus class="h-4 w-4" />
                                             </Button>
@@ -303,12 +380,12 @@ const saveWarehouse = () => {
 
                             <div>
                                 <Label for="driver_id">السائق</Label>
-                                <div class="relative mt-1.5">
+                                <div class="mt-1.5 flex items-center gap-2">
                                     <select
                                         id="driver_id"
                                         v-model="form.driver_id"
                                         required
-                                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                        class="flex h-10 flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                     >
                                         <option value="">اختر السائق</option>
                                         <option
@@ -324,8 +401,8 @@ const saveWarehouse = () => {
                                             <Button
                                                 type="button"
                                                 size="icon"
-                                                variant="ghost"
-                                                class="absolute top-1/2 left-8 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                                variant="outline"
+                                                class="h-10 w-10 flex-shrink-0"
                                             >
                                                 <Plus class="h-4 w-4" />
                                             </Button>
@@ -391,11 +468,11 @@ const saveWarehouse = () => {
 
                             <div>
                                 <Label for="warehouse_id">المستودع</Label>
-                                <div class="relative mt-1.5">
+                                <div class="mt-1.5 flex items-center gap-2">
                                     <select
                                         id="warehouse_id"
                                         v-model="form.warehouse_id"
-                                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                        class="flex h-10 flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                     >
                                         <option value="">اختر المستودع</option>
                                         <option
@@ -411,8 +488,8 @@ const saveWarehouse = () => {
                                             <Button
                                                 type="button"
                                                 size="icon"
-                                                variant="ghost"
-                                                class="absolute top-1/2 left-8 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                                variant="outline"
+                                                class="h-10 w-10 flex-shrink-0"
                                             >
                                                 <Plus class="h-4 w-4" />
                                             </Button>
@@ -495,49 +572,53 @@ const saveWarehouse = () => {
                             class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4"
                         >
                             <div>
-                                <Label for="gasoline">البنزين</Label>
+                                <Label for="gasoline">الجاز</Label>
                                 <Input
                                     id="gasoline"
-                                    v-model="form.gasoline"
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
+                                    :model-value="form.gasoline"
+                                    @blur="handleAmountBlur('gasoline', $event)"
+                                    @focus="
+                                        handleAmountFocus('gasoline', $event)
+                                    "
+                                    type="text"
                                     class="mt-1.5"
                                     placeholder="0.00"
                                 />
                             </div>
                             <div>
-                                <Label for="benzin">البنزين (2)</Label>
+                                <Label for="benzin">البنزين</Label>
                                 <Input
                                     id="benzin"
-                                    v-model="form.benzin"
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
+                                    :model-value="form.benzin"
+                                    @blur="handleAmountBlur('benzin', $event)"
+                                    @focus="handleAmountFocus('benzin', $event)"
+                                    type="text"
                                     class="mt-1.5"
                                     placeholder="0.00"
                                 />
                             </div>
                             <div>
-                                <Label for="fleet">الأسطول</Label>
+                                <Label for="fleet">الطوف</Label>
                                 <Input
                                     id="fleet"
-                                    v-model="form.fleet"
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
+                                    :model-value="form.fleet"
+                                    @blur="handleAmountBlur('fleet', $event)"
+                                    @focus="handleAmountFocus('fleet', $event)"
+                                    type="text"
                                     class="mt-1.5"
                                     placeholder="0.00"
                                 />
                             </div>
                             <div>
-                                <Label for="transit">الترانزيت</Label>
+                                <Label for="transit">العبور</Label>
                                 <Input
                                     id="transit"
-                                    v-model="form.transit"
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
+                                    :model-value="form.transit"
+                                    @blur="handleAmountBlur('transit', $event)"
+                                    @focus="
+                                        handleAmountFocus('transit', $event)
+                                    "
+                                    type="text"
                                     class="mt-1.5"
                                     placeholder="0.00"
                                 />
@@ -546,10 +627,14 @@ const saveWarehouse = () => {
                                 <Label for="window_fee">رسوم النافذة</Label>
                                 <Input
                                     id="window_fee"
-                                    v-model="form.window_fee"
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
+                                    :model-value="form.window_fee"
+                                    @blur="
+                                        handleAmountBlur('window_fee', $event)
+                                    "
+                                    @focus="
+                                        handleAmountFocus('window_fee', $event)
+                                    "
+                                    type="text"
                                     class="mt-1.5"
                                     placeholder="0.00"
                                 />
@@ -558,10 +643,12 @@ const saveWarehouse = () => {
                                 <Label for="manfisto">المنفيستو</Label>
                                 <Input
                                     id="manfisto"
-                                    v-model="form.manfisto"
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
+                                    :model-value="form.manfisto"
+                                    @blur="handleAmountBlur('manfisto', $event)"
+                                    @focus="
+                                        handleAmountFocus('manfisto', $event)
+                                    "
+                                    type="text"
                                     class="mt-1.5"
                                     placeholder="0.00"
                                 />
@@ -570,10 +657,14 @@ const saveWarehouse = () => {
                                 <Label for="freightage">النولون</Label>
                                 <Input
                                     id="freightage"
-                                    v-model="form.freightage"
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
+                                    :model-value="form.freightage"
+                                    @blur="
+                                        handleAmountBlur('freightage', $event)
+                                    "
+                                    @focus="
+                                        handleAmountFocus('freightage', $event)
+                                    "
+                                    type="text"
                                     class="mt-1.5"
                                     placeholder="0.00"
                                 />
@@ -582,10 +673,10 @@ const saveWarehouse = () => {
                                 <Label for="tax">الضريبة</Label>
                                 <Input
                                     id="tax"
-                                    v-model="form.tax"
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
+                                    :model-value="form.tax"
+                                    @blur="handleAmountBlur('tax', $event)"
+                                    @focus="handleAmountFocus('tax', $event)"
+                                    type="text"
                                     class="mt-1.5"
                                     placeholder="0.00"
                                 />
@@ -594,10 +685,14 @@ const saveWarehouse = () => {
                                 <Label for="commission">العمولة</Label>
                                 <Input
                                     id="commission"
-                                    v-model="form.commission"
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
+                                    :model-value="form.commission"
+                                    @blur="
+                                        handleAmountBlur('commission', $event)
+                                    "
+                                    @focus="
+                                        handleAmountFocus('commission', $event)
+                                    "
+                                    type="text"
                                     class="mt-1.5"
                                     placeholder="0.00"
                                 />
@@ -606,14 +701,23 @@ const saveWarehouse = () => {
                                 <Label for="amount">المبلغ الإجمالي</Label>
                                 <Input
                                     id="amount"
-                                    v-model="form.amount"
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
+                                    :model-value="form.amount"
+                                    @blur="handleAmountBlur('amount', $event)"
+                                    @focus="handleAmountFocus('amount', $event)"
+                                    type="text"
                                     required
                                     class="mt-1.5"
+                                    :class="{
+                                        'border-red-500': form.errors.amount,
+                                    }"
                                     placeholder="0.00"
                                 />
+                                <p
+                                    v-if="form.errors.amount"
+                                    class="mt-1 text-sm text-red-500"
+                                >
+                                    {{ form.errors.amount }}
+                                </p>
                             </div>
                         </div>
                     </CardContent>
