@@ -29,7 +29,7 @@ class StoreOrderRequest extends FormRequest
             'freightage' => ['nullable', 'numeric', 'min:0'],
             'tax' => ['nullable', 'numeric', 'min:0'],
             'commission' => ['nullable', 'numeric', 'min:0'],
-            'amount' => ['required', 'numeric', 'min:0'],
+            'amount' => ['nullable', 'numeric', 'min:0'],
             'company' => ['nullable', 'string', 'max:255'],
             'destination' => ['nullable', 'string', 'max:255'],
         ];

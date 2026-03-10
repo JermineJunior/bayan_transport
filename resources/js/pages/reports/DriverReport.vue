@@ -3,7 +3,15 @@ import { Link } from '@inertiajs/vue3';
 import type { BreadcrumbItem } from '@/types';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, FileText, Calendar } from 'lucide-vue-next';
+import {
+    ArrowRight,
+    FileText,
+    Calendar,
+    Fuel,
+    Gauge,
+    Coins,
+    Printer,
+} from 'lucide-vue-next';
 
 interface GeneralSettings {
     name: string;
@@ -26,8 +34,8 @@ interface Props {
     };
     totals: {
         total_amount: string;
-        total_freightage: string;
-        total_tax: string;
+        total_benzin: string;
+        total_gasoline: string;
         orders_count: number;
     };
 }
@@ -39,50 +47,71 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'التقارير', href: '/reports/driver' },
     { title: 'تقرير السائق', href: '/reports/driver' },
 ];
+
+const printReport = () => {
+    window.print();
+};
 </script>
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="space-y-6">
+        <div class="space-y-6 print:space-y-4">
             <!-- Header -->
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                    <FileText class="h-5 w-5 text-primary" />
-                    <h2 class="text-xl font-semibold">
+                    <FileText class="h-5 w-5 text-primary print:hidden" />
+                    <h2 class="text-xl font-semibold print:text-lg">
                         تقرير السائق: {{ driver.name }}
                     </h2>
                 </div>
-                <Link href="/reports/driver">
-                    <Button variant="outline" size="sm">
-                        <ArrowRight class="ms-2 h-4 w-4" />
-                        رجوع
+                <div class="flex gap-2 print:hidden">
+                    <Button variant="outline" size="sm" @click="printReport">
+                        <Printer class="ms-2 h-4 w-4" />
+                        طباعة
                     </Button>
-                </Link>
+                    <Link href="/reports/driver">
+                        <Button variant="outline" size="sm">
+                            <ArrowRight class="ms-2 h-4 w-4" />
+                            رجوع
+                        </Button>
+                    </Link>
+                </div>
             </div>
 
             <!-- Report Info -->
             <div
-                class="rounded-lg border bg-card text-card-foreground shadow-sm"
+                class="rounded-lg border bg-card text-card-foreground shadow-sm print:border-gray-300 print:shadow-none"
             >
-                <div class="flex flex-col space-y-1.5 p-6">
-                    <h3
-                        class="text-lg leading-none font-semibold tracking-tight"
-                    >
-                        {{ settings.name }}
-                    </h3>
-                    <p class="text-sm text-muted-foreground">
-                        {{ settings.location }} - {{ settings.phone }}
-                    </p>
+                <div class="flex items-start gap-4 p-6 print:p-4">
+                    <div class="flex flex-col space-y-1">
+                        <h3
+                            class="text-lg leading-none font-semibold tracking-tight print:text-base"
+                        >
+                            {{ settings.name }}
+                        </h3>
+                        <p class="text-sm text-muted-foreground print:text-xs">
+                            {{ settings.location }}
+                        </p>
+                        <p class="text-sm text-muted-foreground print:text-xs">
+                            {{ settings.phone }}
+                        </p>
+                    </div>
+                    <img
+                        v-if="settings.logo"
+                        :src="`/image/logo/${settings.logo}`"
+                        class="ms-auto h-16 w-16 object-contain print:h-12 print:w-12"
+                        alt="logo"
+                    />
                 </div>
-                <div class="p-6 pt-0">
+                <div class="px-6 pb-6 print:px-4 print:pb-4">
                     <div
-                        class="flex items-center gap-4 text-sm text-muted-foreground"
+                        class="flex items-center gap-4 text-sm text-muted-foreground print:text-xs"
                     >
                         <div
                             v-if="filters.start_date || filters.end_date"
                             class="flex items-center gap-1"
                         >
-                            <Calendar class="h-4 w-4" />
+                            <Calendar class="h-4 w-4 print:h-3 print:w-3" />
                             <span>
                                 {{ filters.start_date || '-' }} إلى
                                 {{ filters.end_date || '-' }}
@@ -94,58 +123,65 @@ const breadcrumbs: BreadcrumbItem[] = [
 
             <!-- Table -->
             <div
-                class="rounded-lg border bg-card text-card-foreground shadow-sm"
+                class="rounded-lg border bg-card text-card-foreground shadow-sm print:border-gray-300 print:shadow-none"
             >
                 <div class="relative w-full overflow-auto">
-                    <table class="w-full caption-bottom text-sm">
-                        <thead class="[&_tr]:border-b">
+                    <table class="w-full caption-bottom text-sm print:text-xs">
+                        <thead
+                            class="[&_tr]:border-b print:[&_tr]:border-gray-300"
+                        >
                             <tr
-                                class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+                                class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted print:hover:bg-transparent"
                             >
                                 <th
-                                    class="h-12 px-4 text-start align-middle font-medium text-muted-foreground"
+                                    class="h-12 px-4 text-start align-middle font-medium text-muted-foreground print:h-8 print:p-2"
                                 >
                                     #
                                 </th>
                                 <th
-                                    class="h-12 px-4 text-start align-middle font-medium text-muted-foreground"
+                                    class="h-12 px-4 text-start align-middle font-medium text-muted-foreground print:h-8 print:p-2"
                                 >
                                     التاريخ
                                 </th>
                                 <th
-                                    class="h-12 px-4 text-start align-middle font-medium text-muted-foreground"
+                                    class="h-12 px-4 text-start align-middle font-medium text-muted-foreground print:h-8 print:p-2"
                                 >
-                                    رقم الطلب
+                                    رقم السيارة
                                 </th>
                                 <th
-                                    class="h-12 px-4 text-start align-middle font-medium text-muted-foreground"
+                                    class="h-12 px-4 text-start align-middle font-medium text-muted-foreground print:h-8 print:p-2"
                                 >
-                                    العميل
+                                    الشركة
                                 </th>
                                 <th
-                                    class="h-12 px-4 text-start align-middle font-medium text-muted-foreground"
-                                >
-                                    المستودع
-                                </th>
-                                <th
-                                    class="h-12 px-4 text-start align-middle font-medium text-muted-foreground"
+                                    class="h-12 px-4 text-start align-middle font-medium text-muted-foreground print:h-8 print:p-2"
                                 >
                                     الوجهة
                                 </th>
                                 <th
-                                    class="h-12 px-4 text-end align-middle font-medium text-muted-foreground"
+                                    class="h-12 px-4 text-end align-middle font-medium text-muted-foreground print:h-8 print:p-2"
+                                >
+                                    الجاز
+                                </th>
+                                <th
+                                    class="h-12 px-4 text-end align-middle font-medium text-muted-foreground print:h-8 print:p-2"
+                                >
+                                    البنزين
+                                </th>
+                                <th
+                                    class="h-12 px-4 text-end align-middle font-medium text-muted-foreground print:h-8 print:p-2"
+                                >
+                                    المنفيستو
+                                </th>
+                                <th
+                                    class="h-12 px-4 text-end align-middle font-medium text-muted-foreground print:h-8 print:p-2"
+                                >
+                                    النولون
+                                </th>
+                                <th
+                                    class="h-12 px-4 text-end align-middle font-medium text-muted-foreground print:h-8 print:p-2"
                                 >
                                     المبلغ
-                                </th>
-                                <th
-                                    class="h-12 px-4 text-end align-middle font-medium text-muted-foreground"
-                                >
-                                    الأجور
-                                </th>
-                                <th
-                                    class="h-12 px-4 text-end align-middle font-medium text-muted-foreground"
-                                >
-                                    الضريبة
                                 </th>
                             </tr>
                         </thead>
@@ -153,88 +189,130 @@ const breadcrumbs: BreadcrumbItem[] = [
                             <tr
                                 v-for="(order, index) in orders"
                                 :key="order.id"
-                                class="border-b transition-colors hover:bg-muted/50"
+                                class="border-b transition-colors hover:bg-muted/50 print:border-gray-300 print:hover:bg-transparent"
                             >
-                                <td class="p-4 align-middle">
+                                <td class="p-4 align-middle print:p-2">
                                     {{ index + 1 }}
                                 </td>
-                                <td class="p-4 align-middle">
+                                <td class="p-4 align-middle print:p-2">
                                     {{ order.date }}
                                 </td>
-                                <td class="p-4 align-middle">
-                                    {{ order.order_number.slice(-5) }}
+                                <td class="p-4 align-middle print:p-2">
+                                    {{ order.car_number }}
                                 </td>
-                                <td class="p-4 align-middle">
-                                    {{ order.customer?.name || '-' }}
+                                <td class="p-4 align-middle print:p-2">
+                                    {{ order.company }}
                                 </td>
-                                <td class="p-4 align-middle">
-                                    {{ order.warehouse?.name || '-' }}
-                                </td>
-                                <td class="p-4 align-middle">
+                                <td class="p-4 align-middle print:p-2">
                                     {{ order.destination }}
                                 </td>
-                                <td class="p-4 text-end align-middle">
-                                    {{ order.amount }}
+                                <td class="p-4 text-end align-middle print:p-2">
+                                    {{ order.gasoline }}
                                 </td>
-                                <td class="p-4 text-end align-middle">
+                                <td class="p-4 text-end align-middle print:p-2">
+                                    {{ order.benzin }}
+                                </td>
+                                <td class="p-4 text-end align-middle print:p-2">
+                                    {{ order.manfisto }}
+                                </td>
+                                <td class="p-4 text-end align-middle print:p-2">
                                     {{ order.freightage }}
                                 </td>
-                                <td class="p-4 text-end align-middle">
-                                    {{ order.tax }}
+                                <td class="p-4 text-end align-middle print:p-2">
+                                    {{ order.amount }}
                                 </td>
                             </tr>
                             <tr v-if="orders.length === 0">
                                 <td
-                                    colspan="9"
-                                    class="p-4 text-center text-muted-foreground"
+                                    colspan="10"
+                                    class="p-4 text-center text-muted-foreground print:p-2"
                                 >
                                     لا توجد بيانات
                                 </td>
                             </tr>
                         </tbody>
-                        <tfoot
-                            v-if="orders.length > 0"
-                            class="border-t bg-muted/50"
-                        >
-                            <tr class="transition-colors hover:bg-muted/50">
-                                <td
-                                    class="p-4 text-start align-middle font-semibold"
-                                    colspan="6"
-                                >
-                                    الإجمالي
-                                </td>
-                                <td
-                                    class="p-4 text-end align-middle font-semibold"
-                                >
-                                    {{ totals.total_amount }}
-                                </td>
-                                <td
-                                    class="p-4 text-end align-middle font-semibold"
-                                >
-                                    {{ totals.total_freightage }}
-                                </td>
-                                <td
-                                    class="p-4 text-end align-middle font-semibold"
-                                >
-                                    {{ totals.total_tax }}
-                                </td>
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
             </div>
 
-            <!-- Footer -->
+            <!-- Totals Cards -->
             <div
                 v-if="orders.length > 0"
-                class="rounded-lg border bg-muted/50 p-4"
+                class="grid grid-cols-1 gap-4 md:grid-cols-3 print:grid-cols-3 print:gap-2"
             >
-                <div class="flex items-center justify-between text-sm">
-                    <span class="font-medium"
-                        >عدد الطلبات: {{ totals.orders_count }}</span
-                    >
+                <div
+                    class="rounded-lg border bg-card p-4 text-card-foreground shadow-sm print:border-gray-300 print:p-2 print:shadow-none"
+                >
+                    <div class="flex items-center gap-3 print:gap-2">
+                        <div class="rounded-full bg-primary/10 p-2 print:p-1">
+                            <Fuel
+                                class="h-5 w-5 text-primary print:h-4 print:w-4"
+                            />
+                        </div>
+                        <div>
+                            <p
+                                class="text-sm text-muted-foreground print:text-xs"
+                            >
+                                مجموع البنزين
+                            </p>
+                            <p class="text-lg font-semibold print:text-sm">
+                                {{ totals.total_benzin }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="rounded-lg border bg-card p-4 text-card-foreground shadow-sm print:border-gray-300 print:p-2 print:shadow-none"
+                >
+                    <div class="flex items-center gap-3 print:gap-2">
+                        <div class="rounded-full bg-primary/10 p-2 print:p-1">
+                            <Gauge
+                                class="h-5 w-5 text-primary print:h-4 print:w-4"
+                            />
+                        </div>
+                        <div>
+                            <p
+                                class="text-sm text-muted-foreground print:text-xs"
+                            >
+                                مجموع الجازولين
+                            </p>
+                            <p class="text-lg font-semibold print:text-sm">
+                                {{ totals.total_gasoline }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="rounded-lg border bg-card p-4 text-card-foreground shadow-sm print:border-gray-300 print:p-2 print:shadow-none"
+                >
+                    <div class="flex items-center gap-3 print:gap-2">
+                        <div class="rounded-full bg-primary/10 p-2 print:p-1">
+                            <Coins
+                                class="h-5 w-5 text-primary print:h-4 print:w-4"
+                            />
+                        </div>
+                        <div>
+                            <p
+                                class="text-sm text-muted-foreground print:text-xs"
+                            >
+                                مجموع المبلغ
+                            </p>
+                            <p class="text-lg font-semibold print:text-sm">
+                                {{ totals.total_amount }}
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </AppLayout>
 </template>
+
+<style scoped>
+@media print {
+    @page {
+        size: landscape;
+        margin: 0.5cm;
+    }
+}
+</style>

@@ -26,8 +26,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const driverId = ref<number | null>(null);
-const startDate = ref('');
-const endDate = ref('');
+const startDate = ref(new Date().toISOString().split('T')[0]);
+const endDate = ref(new Date().toISOString().split('T')[0]);
 
 const generateReport = () => {
     const params: Record<string, string | number | null> = {

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, watch } from 'vue';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -25,8 +26,37 @@ const amountFields = [
     'freightage',
     'tax',
     'commission',
-    'amount',
 ];
+
+const parseNumber = (value: any): number => {
+    if (!value) return 0;
+    const num = parseFloat(value.toString().replace(/,/g, ''));
+    return isNaN(num) ? 0 : num;
+};
+
+const calculatedAmount = computed(() => {
+    const fleet = parseNumber(props.form.fleet);
+    const transit = parseNumber(props.form.transit);
+    const windowFee = parseNumber(props.form.window_fee);
+    const manfisto = parseNumber(props.form.manfisto);
+    const tax = parseNumber(props.form.tax);
+    const commission = parseNumber(props.form.commission);
+
+    return fleet + transit + windowFee + manfisto + tax + commission;
+});
+
+const formattedAmount = computed(() => {
+    const value = calculatedAmount.value;
+    if (value === 0) return '';
+    return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    }).format(value);
+});
+
+watch(calculatedAmount, (newValue) => {
+    props.form.amount = formattedAmount.value;
+});
 
 const handleBlur = (field: string, event: Event) => {
     const target = event.target as HTMLInputElement;
@@ -61,7 +91,7 @@ const fields = [
     { key: 'freightage', label: 'النولون' },
     { key: 'tax', label: 'الضريبة' },
     { key: 'commission', label: 'العمولة' },
-    { key: 'amount', label: 'المبلغ الإجمالي', required: true },
+    { key: 'amount', label: 'المبلغ الإجمالي', readonly: true },
 ];
 </script>
 
@@ -76,8 +106,10 @@ const fields = [
                 <div v-for="field in fields" :key="field.key">
                     <Label :for="field.key">
                         {{ field.label }}
-                        <span v-if="field.required" class="text-destructive"
-                            >*</span
+                        <span
+                            v-if="field.readonly"
+                            class="text-muted-foreground"
+                            >(محسوب)</span
                         >
                     </Label>
                     <Input
@@ -89,8 +121,10 @@ const fields = [
                         class="mt-1.5"
                         :class="{
                             'border-red-500': props.form.errors[field.key],
+                            'bg-muted': field.readonly,
                         }"
                         placeholder="0.00"
+                        :disabled="field.readonly"
                     />
                     <p
                         v-if="props.form.errors[field.key]"

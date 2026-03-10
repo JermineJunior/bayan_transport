@@ -99,7 +99,6 @@ const amountFields = [
     'freightage',
     'tax',
     'commission',
-    'amount',
 ];
 
 const submit = () => {

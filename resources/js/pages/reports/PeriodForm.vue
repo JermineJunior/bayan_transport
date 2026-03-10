@@ -14,8 +14,8 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'تقرير فترة', href: '/reports/period' },
 ];
 
-const startDate = ref('');
-const endDate = ref('');
+const startDate = ref(new Date().toISOString().split('T')[0]);
+const endDate = ref(new Date().toISOString().split('T')[0]);
 
 const generateReport = () => {
     const params: Record<string, string> = {};

@@ -361,12 +361,18 @@ const sidebarNavItems = [
             </header>
 
             <!-- Page Content -->
+            <!-- Page Content -->
             <main class="page-content">
                 <div v-if="props.breadcrumbs.length > 1" class="page-header">
                     <Breadcrumbs :breadcrumbs="props.breadcrumbs" />
                 </div>
                 <slot />
             </main>
+
+            <!-- Footer -->
+            <footer class="main-footer">
+                <p>جميع الحقوق محفوظة بيان للبرمجيات 2026</p>
+            </footer>
         </div>
     </div>
 </template>
@@ -559,7 +565,13 @@ const sidebarNavItems = [
 .app-layout .main-content {
     margin-right: 280px;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     transition: margin-right 0.3s ease;
+}
+
+.app-layout .page-content {
+    flex: 1;
 }
 
 /* Header */
@@ -753,6 +765,30 @@ const sidebarNavItems = [
     border-bottom: 1px solid #e5e7eb;
 }
 
+/* Footer */
+.app-layout .main-footer {
+    padding: 1rem;
+    text-align: center;
+    border-top: 1px solid #e5e7eb;
+    background: #f9fafb;
+    margin-top: auto;
+}
+
+.app-layout .main-footer p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.app-layout.dark-mode .main-footer {
+    background: #1f2937;
+    border-color: #374151;
+}
+
+.app-layout.dark-mode .main-footer p {
+    color: #9ca3af;
+}
+
 /* Sidebar closed - icons only */
 .app-layout:not(.sidebar-open) .app-sidebar {
     width: 80px;
@@ -903,6 +939,41 @@ const sidebarNavItems = [
     .app-layout .main-content,
     .app-layout.sidebar-mini .main-content {
         margin-right: 0;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .app-layout .app-sidebar,
+    .app-layout .main-header,
+    .app-layout .main-footer,
+    .no-print {
+        display: none !important;
+    }
+
+    .app-layout .main-content {
+        margin-right: 0 !important;
+    }
+
+    .app-layout .page-content {
+        padding: 0 !important;
+    }
+
+    .app-layout {
+        font-size: 12pt;
+    }
+
+    .app-layout .rounded-lg {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+
+    .app-layout .shadow-sm {
+        box-shadow: none !important;
+    }
+
+    body {
+        background: white !important;
     }
 }
 </style>

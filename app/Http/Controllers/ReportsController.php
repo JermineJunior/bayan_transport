@@ -66,6 +66,8 @@ class ReportsController extends Controller
         $totalAmount = $orders->sum('amount');
         $totalFreightage = $orders->sum('freightage');
         $totalTax = $orders->sum('tax');
+        $totalBenzin = $orders->sum('benzin');
+        $totalGasoline = $orders->sum('gasoline');
 
         return Inertia::render('reports/CustomerReport', [
             'settings' => $this->getSettings(),
@@ -79,6 +81,8 @@ class ReportsController extends Controller
                 'total_amount' => $this->formatMoney($totalAmount),
                 'total_freightage' => $this->formatMoney($totalFreightage),
                 'total_tax' => $this->formatMoney($totalTax),
+                'total_benzin' => $this->formatMoney($totalBenzin),
+                'total_gasoline' => $this->formatMoney($totalGasoline),
                 'orders_count' => $orders->count(),
             ],
         ]);
@@ -118,6 +122,8 @@ class ReportsController extends Controller
         $totalAmount = $orders->sum('amount');
         $totalFreightage = $orders->sum('freightage');
         $totalTax = $orders->sum('tax');
+        $totalBenzin = $orders->sum('benzin');
+        $totalGasoline = $orders->sum('gasoline');
 
         return Inertia::render('reports/DriverReport', [
             'settings' => $this->getSettings(),
@@ -131,6 +137,8 @@ class ReportsController extends Controller
                 'total_amount' => $this->formatMoney($totalAmount),
                 'total_freightage' => $this->formatMoney($totalFreightage),
                 'total_tax' => $this->formatMoney($totalTax),
+                'total_benzin' => $this->formatMoney($totalBenzin),
+                'total_gasoline' => $this->formatMoney($totalGasoline),
                 'orders_count' => $orders->count(),
             ],
         ]);
@@ -158,9 +166,8 @@ class ReportsController extends Controller
             ->get();
 
         $totalAmount = $orders->sum('amount');
-        $totalFreightage = $orders->sum('freightage');
-        $totalTax = $orders->sum('tax');
-        $totalCommission = $orders->sum('commission');
+        $totalBenzin = $orders->sum('benzin');
+        $totalGasoline = $orders->sum('gasoline');
 
         return Inertia::render('reports/PeriodReport', [
             'settings' => $this->getSettings(),
@@ -171,9 +178,8 @@ class ReportsController extends Controller
             ],
             'totals' => [
                 'total_amount' => $this->formatMoney($totalAmount),
-                'total_freightage' => $this->formatMoney($totalFreightage),
-                'total_tax' => $this->formatMoney($totalTax),
-                'total_commission' => $this->formatMoney($totalCommission),
+                'total_benzin' => $this->formatMoney($totalBenzin),
+                'total_gasoline' => $this->formatMoney($totalGasoline),
                 'orders_count' => $orders->count(),
             ],
         ]);
@@ -208,8 +214,8 @@ class ReportsController extends Controller
 
         $orders = $query->orderBy('date', 'desc')->get();
         $totalAmount = $orders->sum('amount');
-        $totalFreightage = $orders->sum('freightage');
-        $totalTax = $orders->sum('tax');
+        $totalBenzin = $orders->sum('benzin');
+        $totalGasoline = $orders->sum('gasoline');
 
         return Inertia::render('reports/DestinationReport', [
             'settings' => $this->getSettings(),
@@ -221,8 +227,8 @@ class ReportsController extends Controller
             ],
             'totals' => [
                 'total_amount' => $this->formatMoney($totalAmount),
-                'total_freightage' => $this->formatMoney($totalFreightage),
-                'total_tax' => $this->formatMoney($totalTax),
+                'total_benzin' => $this->formatMoney($totalBenzin),
+                'total_gasoline' => $this->formatMoney($totalGasoline),
                 'orders_count' => $orders->count(),
             ],
         ]);
@@ -257,8 +263,8 @@ class ReportsController extends Controller
 
         $orders = $query->orderBy('date', 'desc')->get();
         $totalAmount = $orders->sum('amount');
-        $totalFreightage = $orders->sum('freightage');
-        $totalTax = $orders->sum('tax');
+        $totalBenzin = $orders->sum('benzin');
+        $totalGasoline = $orders->sum('gasoline');
 
         return Inertia::render('reports/CompanyReport', [
             'settings' => $this->getSettings(),
@@ -270,8 +276,8 @@ class ReportsController extends Controller
             ],
             'totals' => [
                 'total_amount' => $this->formatMoney($totalAmount),
-                'total_freightage' => $this->formatMoney($totalFreightage),
-                'total_tax' => $this->formatMoney($totalTax),
+                'total_benzin' => $this->formatMoney($totalBenzin),
+                'total_gasoline' => $this->formatMoney($totalGasoline),
                 'orders_count' => $orders->count(),
             ],
         ]);
