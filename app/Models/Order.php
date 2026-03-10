@@ -34,7 +34,7 @@ class Order extends Model
     protected function casts(): array
     {
         return [
-            'date' => 'date',
+            'date' => 'date:Y-m-d',
             'gasoline' => 'decimal:2',
             'benzin' => 'decimal:2',
             'fleet' => 'decimal:2',
