@@ -12,7 +12,7 @@ class DriverController extends Controller
 {
     public function index(): Response
     {
-        $drivers = Driver::query()->get();
+        $drivers = Driver::query()->paginate(15);
 
         return Inertia::render('drivers/Index', [
             'drivers' => $drivers,
@@ -33,7 +33,7 @@ class DriverController extends Controller
             'phone' => ['nullable', 'string', 'max:20'],
         ]);
 
-        $driver = Driver::create($validated);
+        $driver = Driver::query()->create($validated);
 
         // من صفحة طلبات العبور
         $redirectTo = $request->input('redirect_to');

@@ -52,15 +52,15 @@ class FortifyServiceProvider extends ServiceProvider
             $request->merge([$field => $login]);
 
             $validator = Validator::make($request->all(), [
-                $field => 'required|string',
-                'password' => 'required|string',
+                $field => ['required', 'string'],
+                'password' => ['required', 'string'],
             ]);
 
             if ($validator->fails()) {
                 return null;
             }
 
-            $user = User::where($field, $login)->first();
+            $user = User::query()->where($field, $login)->first();
 
             if ($user && Hash::check($request->password, $user->password)) {
                 return $user;
@@ -106,9 +106,7 @@ class FortifyServiceProvider extends ServiceProvider
      */
     private function configureRateLimiting(): void
     {
-        RateLimiter::for('two-factor', function (Request $request) {
-            return Limit::perMinute(5)->by($request->session()->get('login.id'));
-        });
+        RateLimiter::for('two-factor', fn (Request $request) => Limit::perMinute(5)->by($request->session()->get('login.id')));
 
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());

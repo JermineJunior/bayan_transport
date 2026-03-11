@@ -1,9 +1,16 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { dashboard } from '@/routes';
-import { Truck, ClipboardList, Users, Warehouse } from 'lucide-vue-next';
+import {
+    Truck,
+    ClipboardList,
+    Users,
+    Warehouse,
+    Plus,
+    UserPlus,
+} from 'lucide-vue-next';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -18,10 +25,11 @@ interface Props {
         totalOrders: number;
         totalDrivers: number;
         totalWarehouses: number;
+        currentMonthName: string;
     };
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 
 const formatNumber = (num: number) => {
     return new Intl.NumberFormat('en-US').format(num);
@@ -35,12 +43,44 @@ const formatNumber = (num: number) => {
         <div class="p-6">
             <h1 class="mb-6 text-2xl font-bold">لوحة التحكم</h1>
 
+            <!-- Quick Create Links -->
+            <div class="mb-6 flex flex-wrap gap-3">
+                <Link
+                    href="/orders/create"
+                    class="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90"
+                >
+                    <Plus class="h-4 w-4" />
+                    طلب جديد
+                </Link>
+                <Link
+                    href="/customers"
+                    class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                >
+                    <UserPlus class="h-4 w-4" />
+                    إضافة عميل
+                </Link>
+                <Link
+                    href="/drivers"
+                    class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
+                >
+                    <UserPlus class="h-4 w-4" />
+                    إضافة سائق
+                </Link>
+                <Link
+                    href="/warehouses"
+                    class="inline-flex items-center gap-2 rounded-lg bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700"
+                >
+                    <Plus class="h-4 w-4" />
+                    إضافة مستودع
+                </Link>
+            </div>
+
             <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 <div class="rounded-lg border bg-card p-6 shadow-sm">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm text-muted-foreground">
-                                ترحيلات الشهر
+                                ترحيلات شهر {{ stats.currentMonthName }}
                             </p>
                             <p class="mt-1 text-3xl font-bold">
                                 {{ formatNumber(stats.ordersThisMonth) }}

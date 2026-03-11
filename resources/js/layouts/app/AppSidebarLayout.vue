@@ -136,11 +136,11 @@ const sidebarNavItems = [
         title: 'التقارير',
         icon: FileText,
         items: [
-            { title: 'تقرير العملاء', href: '/reports/customer' },
-            { title: 'تقرير السائقين', href: '/reports/driver' },
-            { title: 'تقرير فترة', href: '/reports/period' },
-            { title: 'تقرير وجهة', href: '/reports/destination' },
-            { title: 'تقرير شركة', href: '/reports/company' },
+            { title: 'تقرير الترحيلات حسب الفترة', href: '/reports/period' },
+            { title: 'تقرير الترحيلات حسب العميل', href: '/reports/customer' },
+            { title: 'تقرير الترحيلات حسب السائق', href: '/reports/driver' },
+            { title: 'تقرير الترحيلات حسب الوجهة', href: '/reports/destination' },
+            { title: 'تقرير  الترحيلات حسب الشركة', href: '/reports/company' },
         ],
     },
     {

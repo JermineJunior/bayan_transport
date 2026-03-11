@@ -12,7 +12,7 @@ class WarehouseController extends Controller
 {
     public function index(): Response
     {
-        $warehouses = Warehouse::query()->get();
+        $warehouses = Warehouse::query()->paginate(15);
 
         return Inertia::render('warehouses/Index', [
             'warehouses' => $warehouses,
@@ -33,7 +33,7 @@ class WarehouseController extends Controller
             'is_active' => ['nullable', 'boolean'],
         ]);
 
-        $warehouse = Warehouse::create($validated);
+        $warehouse = Warehouse::query()->create($validated);
 
         // من صفحة طلبات العبور
         $redirectTo = $request->input('redirect_to');

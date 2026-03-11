@@ -13,6 +13,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import Pagination from '@/components/ui/pagination/Pagination.vue';
 import {
     Dialog,
     DialogClose,
@@ -33,8 +34,22 @@ interface Customer {
     phone: string | null;
 }
 
+interface Link {
+    url: string | null;
+    label: string;
+    active: boolean;
+}
+
 interface Props {
-    customers: Customer[];
+    customers: {
+        data: Customer[];
+        links: Link[];
+        current_page: number;
+        last_page: number;
+        from: number;
+        to: number;
+        total: number;
+    };
 }
 
 const props = defineProps<Props>();
@@ -195,7 +210,7 @@ const deleteCustomer = (id: number) => {
                     </TableHeader>
                     <TableBody>
                         <TableRow
-                            v-for="customer in props.customers"
+                            v-for="customer in props.customers.data"
                             :key="customer.id"
                             class="hover:bg-muted/50"
                         >
@@ -252,6 +267,10 @@ const deleteCustomer = (id: number) => {
                         </TableRow>
                     </TableBody>
                 </Table>
+                <Pagination
+                    v-if="props.customers.links"
+                    :links="props.customers.links"
+                />
             </div>
         </div>
     </AppLayout>

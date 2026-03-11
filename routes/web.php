@@ -12,25 +12,23 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canRegister' => Features::enabled(Features::registration()),
-    ]);
-})->name('home');
+Route::get('/', fn () => Inertia::render('Welcome', [
+    'canRegister' => Features::enabled(Features::registration()),
+]))->name('home');
 
 Route::get('dashboard', DashboardController::class)->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'verified'])->prefix('admin')->group(function (): void {
     Route::resource('users', UserController::class)->names('users');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::resource('customers', CustomerController::class)->names('customers');
     Route::resource('drivers', DriverController::class)->names('drivers');
     Route::resource('warehouses', WarehouseController::class)->names('warehouses');
     Route::resource('orders', OrderController::class)->names('orders');
 
-    Route::prefix('reports')->group(function () {
+    Route::prefix('reports')->group(function (): void {
         Route::get('customer', [ReportsController::class, 'customerIndex'])->name('reports.customer.index');
         Route::get('customer/generate', [ReportsController::class, 'customerReport'])->name('reports.customer.generate');
 
@@ -48,7 +46,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
-Route::middleware(['auth', 'verified'])->prefix('settings')->group(function () {
+Route::middleware(['auth', 'verified'])->prefix('settings')->group(function (): void {
     Route::get('general', [GeneralSettingController::class, 'index'])->name('general-settings.index');
     Route::put('general', [GeneralSettingController::class, 'update'])->name('general-settings.update');
 });

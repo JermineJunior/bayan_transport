@@ -13,6 +13,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import Pagination from '@/components/ui/pagination/Pagination.vue';
 import {
     Dialog,
     DialogClose,
@@ -33,8 +34,22 @@ interface Driver {
     phone: string | null;
 }
 
+interface Link {
+    url: string | null;
+    label: string;
+    active: boolean;
+}
+
 interface Props {
-    drivers: Driver[];
+    drivers: {
+        data: Driver[];
+        links: Link[];
+        current_page: number;
+        last_page: number;
+        from: number;
+        to: number;
+        total: number;
+    };
 }
 
 const props = defineProps<Props>();
@@ -195,7 +210,7 @@ const deleteDriver = (id: number) => {
                     </TableHeader>
                     <TableBody>
                         <TableRow
-                            v-for="driver in props.drivers"
+                            v-for="driver in props.drivers.data"
                             :key="driver.id"
                             class="hover:bg-muted/50"
                         >
@@ -252,6 +267,10 @@ const deleteDriver = (id: number) => {
                         </TableRow>
                     </TableBody>
                 </Table>
+                <Pagination
+                    v-if="props.drivers.links"
+                    :links="props.drivers.links"
+                />
             </div>
         </div>
     </AppLayout>

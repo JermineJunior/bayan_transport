@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { useForm, router } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
 import type { BreadcrumbItem } from '@/types';
 import AppLayout from '@/layouts/AppLayout.vue';
 import {
@@ -12,7 +13,9 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Eye, Pencil, Trash2, Plus, ArrowUp, ArrowDown } from 'lucide-vue-next';
+import { Input } from '@/components/ui/input';
+import Pagination from '@/components/ui/pagination/Pagination.vue';
+import { Eye, Plus, ArrowUp, ArrowDown, Search } from 'lucide-vue-next';
 
 interface Order {
     id: number;
@@ -37,20 +40,53 @@ interface Order {
     created_at: string;
 }
 
+interface Link {
+    url: string | null;
+    label: string;
+    active: boolean;
+}
+
 interface Props {
-    orders: Order[];
+    orders: {
+        data: Order[];
+        links: Link[];
+        current_page: number;
+        last_page: number;
+        from: number;
+        to: number;
+        total: number;
+    };
     sort: string;
     direction: string;
+    search: string | null;
 }
 
 const props = defineProps<Props>();
+
+const searchQuery = ref(props.search || '');
+
+let searchTimeout: ReturnType<typeof setTimeout> | null = null;
+
+const handleSearch = () => {
+    if (searchTimeout) {
+        clearTimeout(searchTimeout);
+    }
+    searchTimeout = setTimeout(() => {
+        router.visit('/orders', {
+            method: 'get',
+            data: { search: searchQuery.value || undefined },
+            replace: true,
+            preserveState: true,
+        });
+    }, 300);
+};
+
+watch(searchQuery, handleSearch);
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'الرئيسية', href: '/dashboard' },
     { title: 'الطلبات', href: '/orders' },
 ];
-
-const form = useForm({});
 
 const sortBy = (field: string) => {
     const newDirection =
@@ -61,12 +97,6 @@ const sortBy = (field: string) => {
         replace: true,
         preserveState: true,
     });
-};
-
-const deleteOrder = (id: number) => {
-    if (confirm('هل أنت متأكد من حذف هذا الطلب؟')) {
-        form.delete(`/orders/${id}`);
-    }
 };
 
 const formatDate = (date: string) => {
@@ -89,19 +119,34 @@ const formatAmount = (amount: number | null) => {
 <template>
     <AppLayout :breadcrumbs="breadcrumbs" :sidebar-open="false">
         <div class="space-y-6 p-2">
-            <div class="flex items-center justify-between px-4">
+            <div
+                class="flex flex-col gap-4 px-4 md:flex-row md:items-center md:justify-between"
+            >
                 <div>
                     <h1 class="text-2xl font-bold">الطلبات</h1>
                     <p class="mt-1 text-sm text-muted-foreground">
                         إدارة بيانات الطلبات
                     </p>
                 </div>
-                <Link href="/orders/create">
-                    <Button class="gap-2">
-                        <Plus class="h-4 w-4" />
-                        إضافة طلب
-                    </Button>
-                </Link>
+                <div class="flex items-center gap-2">
+                    <div class="relative">
+                        <Search
+                            class="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                        />
+                        <Input
+                            v-model="searchQuery"
+                            type="search"
+                            placeholder="بحث (عميل، وجهة، شركة، مستودع)..."
+                            class="w-64 ps-9"
+                        />
+                    </div>
+                    <Link href="/orders/create">
+                        <Button class="gap-2">
+                            <Plus class="h-4 w-4" />
+                            إضافة طلب
+                        </Button>
+                    </Link>
+                </div>
             </div>
 
             <div class="overflow-x-auto rounded-lg border bg-card">
@@ -268,7 +313,7 @@ const formatAmount = (amount: number | null) => {
                     </TableHeader>
                     <TableBody>
                         <TableRow
-                            v-for="order in props.orders"
+                            v-for="order in props.orders.data"
                             :key="order.id"
                             class="border-b hover:bg-muted/50"
                         >
@@ -363,9 +408,7 @@ const formatAmount = (amount: number | null) => {
                                 {{ formatAmount(order.amount) }}
                             </TableCell>
                             <TableCell>
-                                <div
-                                    class="flex items-center justify-end gap-1"
-                                >
+                                <div class="flex items-center justify-end">
                                     <Link :href="`/orders/${order.id}`">
                                         <Button
                                             variant="ghost"
@@ -376,30 +419,15 @@ const formatAmount = (amount: number | null) => {
                                             <Eye class="h-3 w-3" />
                                         </Button>
                                     </Link>
-                                    <Link :href="`/orders/${order.id}/edit`">
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            title="تعديل"
-                                            class="h-7 w-7"
-                                        >
-                                            <Pencil class="h-3 w-3" />
-                                        </Button>
-                                    </Link>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        class="h-7 w-7 text-destructive hover:text-destructive"
-                                        title="حذف"
-                                        @click="deleteOrder(order.id)"
-                                    >
-                                        <Trash2 class="h-3 w-3" />
-                                    </Button>
                                 </div>
                             </TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
+                <Pagination
+                    v-if="props.orders.links"
+                    :links="props.orders.links"
+                />
             </div>
         </div>
     </AppLayout>

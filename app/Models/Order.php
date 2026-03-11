@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Date;
 
 class Order extends Model
 {
+    use HasFactory;
+
     protected $guarded = ['id'];
 
     protected $fillable = [
@@ -65,19 +68,15 @@ class Order extends Model
 
     public static function generateOrderNumber($date = null): string
     {
-        $date = $date ? Carbon::parse($date) : now();
+        $date = $date ? Date::parse($date) : now();
 
         $prefix = $date->format('Ym'); // 202603
 
-        $last = self::where('order_number', 'like', $prefix.'%')
+        $last = self::query()->where('order_number', 'like', $prefix.'%')
             ->orderByDesc('order_number')
             ->first();
 
-        if ($last) {
-            $sequence = intval(substr($last->order_number, -5)) + 1;
-        } else {
-            $sequence = 1;
-        }
+        $sequence = $last ? intval(substr((string) $last->order_number, -5)) + 1 : 1;
 
         return $prefix.str_pad($sequence, 5, '0', STR_PAD_LEFT);
     }

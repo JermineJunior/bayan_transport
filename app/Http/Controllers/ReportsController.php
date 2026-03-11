@@ -6,15 +6,15 @@ use App\Models\Customer;
 use App\Models\Driver;
 use App\Models\GeneralSetting;
 use App\Models\Order;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
 use Inertia\Inertia;
 
 class ReportsController extends Controller
 {
     private function getSettings()
     {
-        return GeneralSetting::first() ?? new GeneralSetting([
+        return GeneralSetting::query()->first() ?? new GeneralSetting([
             'name' => 'نظام الترحيلات',
             'location' => '',
             'phone' => '',
@@ -22,19 +22,19 @@ class ReportsController extends Controller
         ]);
     }
 
-    private function formatDate($date)
+    private function formatDate($date): ?string
     {
-        return $date ? Carbon::parse($date)->format('Y-m-d') : null;
+        return $date ? Date::parse($date)->format('Y-m-d') : null;
     }
 
-    private function formatMoney($amount)
+    private function formatMoney($amount): string
     {
         return number_format($amount, 2, '.', ',');
     }
 
     public function customerIndex()
     {
-        $customers = Customer::orderBy('name')->get(['id', 'name']);
+        $customers = Customer::query()->orderBy('name')->get(['id', 'name']);
 
         return Inertia::render('reports/CustomerForm', [
             'customers' => $customers,
@@ -44,12 +44,12 @@ class ReportsController extends Controller
     public function customerReport(Request $request)
     {
         $request->validate([
-            'customer_id' => 'required|exists:customers,id',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'customer_id' => ['required', 'exists:customers,id'],
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
         ]);
 
-        $customer = Customer::findOrFail($request->customer_id);
+        $customer = Customer::query()->findOrFail($request->customer_id);
         $startDate = $request->start_date;
         $endDate = $request->end_date;
 
@@ -58,6 +58,7 @@ class ReportsController extends Controller
         if ($startDate) {
             $query->where('date', '>=', $startDate);
         }
+
         if ($endDate) {
             $query->where('date', '<=', $endDate);
         }
@@ -90,7 +91,7 @@ class ReportsController extends Controller
 
     public function driverIndex()
     {
-        $drivers = Driver::orderBy('name')->get(['id', 'name']);
+        $drivers = Driver::query()->orderBy('name')->get(['id', 'name']);
 
         return Inertia::render('reports/DriverForm', [
             'drivers' => $drivers,
@@ -100,12 +101,12 @@ class ReportsController extends Controller
     public function driverReport(Request $request)
     {
         $request->validate([
-            'driver_id' => 'required|exists:drivers,id',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'driver_id' => ['required', 'exists:drivers,id'],
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
         ]);
 
-        $driver = Driver::findOrFail($request->driver_id);
+        $driver = Driver::query()->findOrFail($request->driver_id);
         $startDate = $request->start_date;
         $endDate = $request->end_date;
 
@@ -114,6 +115,7 @@ class ReportsController extends Controller
         if ($startDate) {
             $query->where('date', '>=', $startDate);
         }
+
         if ($endDate) {
             $query->where('date', '<=', $endDate);
         }
@@ -152,8 +154,8 @@ class ReportsController extends Controller
     public function periodReport(Request $request)
     {
         $request->validate([
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
+            'start_date' => ['required', 'date'],
+            'end_date' => ['required', 'date', 'after_or_equal:start_date'],
         ]);
 
         $startDate = $request->start_date;
@@ -193,9 +195,9 @@ class ReportsController extends Controller
     public function destinationReport(Request $request)
     {
         $request->validate([
-            'destination' => 'required|string|max:255',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'destination' => ['required', 'string', 'max:255'],
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
         ]);
 
         $destination = $request->destination;
@@ -208,6 +210,7 @@ class ReportsController extends Controller
         if ($startDate) {
             $query->where('date', '>=', $startDate);
         }
+
         if ($endDate) {
             $query->where('date', '<=', $endDate);
         }
@@ -242,9 +245,9 @@ class ReportsController extends Controller
     public function companyReport(Request $request)
     {
         $request->validate([
-            'company' => 'required|string|max:255',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'company' => ['required', 'string', 'max:255'],
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
         ]);
 
         $company = $request->company;
@@ -257,6 +260,7 @@ class ReportsController extends Controller
         if ($startDate) {
             $query->where('date', '>=', $startDate);
         }
+
         if ($endDate) {
             $query->where('date', '<=', $endDate);
         }

@@ -17,7 +17,23 @@ class OrderController extends Controller
 {
     public function index(Request $request): Response
     {
-        $query = Order::query()->with(['customer', 'driver', 'warehouse']);
+        $search = $request->input('search');
+
+        $query = Order::query()
+            ->with(['customer', 'driver', 'warehouse']);
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('company', 'like', "%{$search}%")
+                    ->orWhere('destination', 'like', "%{$search}%")
+                    ->orWhereHas('customer', function ($customerQuery) use ($search) {
+                        $customerQuery->where('name', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('warehouse', function ($warehouseQuery) use ($search) {
+                        $warehouseQuery->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
 
         $sortField = $request->input('sort', 'id');
         $sortDirection = $request->input('direction', 'desc');
@@ -41,12 +57,13 @@ class OrderController extends Controller
             $query->orderBy($sortField, $sortDirection === 'asc' ? 'asc' : 'desc');
         }
 
-        $orders = $query->get();
+        $orders = $query->paginate(15)->withQueryString();
 
         return Inertia::render('orders/Index', [
             'orders' => $orders,
             'sort' => $sortField,
             'direction' => $sortDirection,
+            'search' => $search,
         ]);
     }
 
@@ -54,9 +71,9 @@ class OrderController extends Controller
     {
         $orderNumber = Order::generateOrderNumber();
 
-        $customers = Customer::all()->map(fn ($c) => ['id' => $c->id, 'name' => $c->name]);
-        $drivers = Driver::all()->map(fn ($d) => ['id' => $d->id, 'name' => $d->name]);
-        $warehouses = Warehouse::where('is_active', true)->get()->map(fn ($w) => ['id' => $w->id, 'name' => $w->name]);
+        $customers = Customer::all()->map(fn ($c): array => ['id' => $c->id, 'name' => $c->name]);
+        $drivers = Driver::all()->map(fn ($d): array => ['id' => $d->id, 'name' => $d->name]);
+        $warehouses = Warehouse::query()->where('is_active', true)->get()->map(fn ($w): array => ['id' => $w->id, 'name' => $w->name]);
 
         return Inertia::render('orders/Create', [
             'orderNumber' => $orderNumber,
@@ -73,7 +90,7 @@ class OrderController extends Controller
     {
         $validated = $request->validated();
 
-        Order::create($validated);
+        Order::query()->create($validated);
 
         return to_route('orders.index')->with('success', 'تم إنشاء الطلب بنجاح');
     }
@@ -91,9 +108,9 @@ class OrderController extends Controller
     {
         $order->load(['customer', 'driver', 'warehouse']);
 
-        $customers = Customer::all()->map(fn ($c) => ['id' => $c->id, 'name' => $c->name]);
-        $drivers = Driver::all()->map(fn ($d) => ['id' => $d->id, 'name' => $d->name]);
-        $warehouses = Warehouse::where('is_active', true)->get()->map(fn ($w) => ['id' => $w->id, 'name' => $w->name]);
+        $customers = Customer::all()->map(fn ($c): array => ['id' => $c->id, 'name' => $c->name]);
+        $drivers = Driver::all()->map(fn ($d): array => ['id' => $d->id, 'name' => $d->name]);
+        $warehouses = Warehouse::query()->where('is_active', true)->get()->map(fn ($w): array => ['id' => $w->id, 'name' => $w->name]);
 
         return Inertia::render('orders/Edit', [
             'order' => $order,

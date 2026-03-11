@@ -13,6 +13,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import Pagination from '@/components/ui/pagination/Pagination.vue';
 import {
     Dialog,
     DialogClose,
@@ -40,8 +41,22 @@ interface Warehouse {
     is_active: boolean;
 }
 
+interface Link {
+    url: string | null;
+    label: string;
+    active: boolean;
+}
+
 interface Props {
-    warehouses: Warehouse[];
+    warehouses: {
+        data: Warehouse[];
+        links: Link[];
+        current_page: number;
+        last_page: number;
+        from: number;
+        to: number;
+        total: number;
+    };
 }
 
 const props = defineProps<Props>();
@@ -193,7 +208,7 @@ const deleteWarehouse = (id: number) => {
                     </TableHeader>
                     <TableBody>
                         <TableRow
-                            v-for="warehouse in props.warehouses"
+                            v-for="warehouse in props.warehouses.data"
                             :key="warehouse.id"
                             class="hover:bg-muted/50"
                         >
@@ -258,6 +273,10 @@ const deleteWarehouse = (id: number) => {
                         </TableRow>
                     </TableBody>
                 </Table>
+                <Pagination
+                    v-if="props.warehouses.links"
+                    :links="props.warehouses.links"
+                />
             </div>
         </div>
     </AppLayout>

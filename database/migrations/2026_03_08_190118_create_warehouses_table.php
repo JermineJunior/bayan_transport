@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('warehouses', function (Blueprint $table) {
+        Schema::create('warehouses', function (Blueprint $table): void {
             $table->id();
             $table->string('name')->unique();
             $table->boolean('is_active')->default(true);

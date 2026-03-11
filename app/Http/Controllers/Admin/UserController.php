@@ -14,7 +14,7 @@ class UserController extends Controller
 {
     public function index(): Response
     {
-        $users = User::query()->get();
+        $users = User::query()->paginate(15);
 
         return Inertia::render('admin/users/Index', [
             'users' => $users,
@@ -37,7 +37,7 @@ class UserController extends Controller
 
         ]);
 
-        $user = User::create([
+        User::query()->create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => $validated['password'],

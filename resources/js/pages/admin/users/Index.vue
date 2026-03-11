@@ -13,6 +13,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import Pagination from '@/components/ui/pagination/Pagination.vue';
 import {
     Dialog,
     DialogClose,
@@ -55,8 +56,22 @@ interface User {
     branches: Branch[];
 }
 
+interface Link {
+    url: string | null;
+    label: string;
+    active: boolean;
+}
+
 interface Props {
-    users: User[];
+    users: {
+        data: User[];
+        links: Link[];
+        current_page: number;
+        last_page: number;
+        from: number;
+        to: number;
+        total: number;
+    };
     roles: Role[];
     branches: Branch[];
 }
@@ -337,7 +352,7 @@ const toggleUserBranch = (branchId: number) => {
                     </TableHeader>
                     <TableBody>
                         <TableRow
-                            v-for="user in props.users"
+                            v-for="user in props.users.data"
                             :key="user.id"
                             class="hover:bg-muted/50"
                         >
@@ -413,6 +428,10 @@ const toggleUserBranch = (branchId: number) => {
                         </TableRow>
                     </TableBody>
                 </Table>
+                <Pagination
+                    v-if="props.users.links"
+                    :links="props.users.links"
+                />
             </div>
         </div>
     </AppLayout>

@@ -12,7 +12,7 @@ class CustomerController extends Controller
 {
     public function index(): Response
     {
-        $customers = Customer::query()->get();
+        $customers = Customer::query()->paginate(15);
 
         return Inertia::render('customers/Index', [
             'customers' => $customers,
@@ -33,7 +33,7 @@ class CustomerController extends Controller
             'phone' => ['nullable', 'string', 'max:20'],
         ]);
 
-        $customer = Customer::create($validated);
+        $customer = Customer::query()->create($validated);
         // من صفحة طلبات العبور
         $redirectTo = $request->input('redirect_to');
         if ($redirectTo === 'order_create') {
