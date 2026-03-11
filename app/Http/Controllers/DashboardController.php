@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Date;
 use App\Models\Driver;
 use App\Models\Order;
 use App\Models\Warehouse;
-use Carbon\Carbon;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -21,7 +21,7 @@ class DashboardController extends Controller
         $totalDrivers = Driver::query()->count();
         $totalWarehouses = Warehouse::query()->count();
 
-        $currentMonthName = Carbon::now()->locale('ar')->monthName;
+        $currentMonthName = Date::now()->locale('ar')->monthName;
 
         return Inertia::render('Dashboard', [
             'stats' => [

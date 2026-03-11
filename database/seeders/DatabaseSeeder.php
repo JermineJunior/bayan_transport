@@ -11,8 +11,13 @@ class DatabaseSeeder extends Seeder
     {
         User::factory()->create([
             'name' => 'مدير النظام',
+            'username' => 'admin',
             'email' => 'admin@example.com',
         ]);
+
+        $this->call(
+            GeneralSettingSeeder::class,
+        );
 
     }
 }

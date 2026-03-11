@@ -13,7 +13,7 @@ class GeneralSettingSeeder extends Seeder
     public function run(): void
     {
         GeneralSetting::query()->firstOrCreate(['id' => 1], [
-            'name' => 'أميركو العالمية المحدودة',
+            'name' => 'شركة بيان لتطوير الاعمال',
             'location' => null,
             'phone' => null,
             'phone_2' => null,

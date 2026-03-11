@@ -203,7 +203,7 @@ const deleteDriver = (id: number) => {
                             <TableHead class="font-semibold"
                                 >رقم الهاتف</TableHead
                             >
-                            <TableHead class="text-right font-semibold"
+                            <TableHead class="text-left  font-semibold"
                                 >الإجراءات</TableHead
                             >
                         </TableRow>

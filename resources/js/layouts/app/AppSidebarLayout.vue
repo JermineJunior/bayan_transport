@@ -13,9 +13,9 @@ import {
     Moon,
     LogOut,
     User as UserIcon,
-    BookKey,
     Truck,
     FileText,
+    BookMarked,
 } from 'lucide-vue-next';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { dashboard, logout } from '@/routes';
@@ -119,8 +119,8 @@ const logoUrl = computed(() => {
 
 const sidebarNavItems = [
     {
-        title: 'البيانات اولية',
-        icon: BookKey,
+        title: 'قائمة العملاء والسائقين والمستودعات',
+        icon: BookMarked,
         items: [
             { title: 'قائمة العملاء', href: '/customers' },
             { title: 'قائمة السائقين', href: '/drivers' },
@@ -128,9 +128,9 @@ const sidebarNavItems = [
         ],
     },
     {
-        title: 'الترحيلات',
+        title: 'قائمة الترحيلات',
         icon: Truck,
-        items: [{ title: 'قائمة الترحيلات', href: '/orders' }],
+        items: [{ title: 'الترحيلات', href: '/orders' }],
     },
     {
         title: 'التقارير',

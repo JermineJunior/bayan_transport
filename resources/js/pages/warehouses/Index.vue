@@ -201,7 +201,7 @@ const deleteWarehouse = (id: number) => {
                         <TableRow class="hover:bg-transparent">
                             <TableHead class="font-semibold">الاسم</TableHead>
                             <TableHead class="font-semibold">الحالة</TableHead>
-                            <TableHead class="text-right font-semibold"
+                            <TableHead class="text-left font-semibold"
                                 >الإجراءات</TableHead
                             >
                         </TableRow>

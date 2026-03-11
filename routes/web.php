@@ -9,12 +9,8 @@ use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\Settings\GeneralSettingController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-use Laravel\Fortify\Features;
 
-Route::get('/', fn () => Inertia::render('Welcome', [
-    'canRegister' => Features::enabled(Features::registration()),
-]))->name('home');
+Route::get('/', fn () => to_route('login'))->name('home');
 
 Route::get('dashboard', DashboardController::class)->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -23,11 +19,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function (): voi
 });
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
+    // main modules
     Route::resource('customers', CustomerController::class)->names('customers');
     Route::resource('drivers', DriverController::class)->names('drivers');
     Route::resource('warehouses', WarehouseController::class)->names('warehouses');
     Route::resource('orders', OrderController::class)->names('orders');
-
+    // order reports
     Route::prefix('reports')->group(function (): void {
         Route::get('customer', [ReportsController::class, 'customerIndex'])->name('reports.customer.index');
         Route::get('customer/generate', [ReportsController::class, 'customerReport'])->name('reports.customer.generate');
@@ -45,7 +42,7 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
         Route::get('company/generate', [ReportsController::class, 'companyReport'])->name('reports.company.generate');
     });
 });
-
+// general settings
 Route::middleware(['auth', 'verified'])->prefix('settings')->group(function (): void {
     Route::get('general', [GeneralSettingController::class, 'index'])->name('general-settings.index');
     Route::put('general', [GeneralSettingController::class, 'update'])->name('general-settings.update');

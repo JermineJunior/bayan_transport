@@ -13,7 +13,7 @@ class AuthenticateUser
     {
         $login = $request->input(Fortify::username());
 
-        $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
+        $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
         $credentials = [
             $field => $login,

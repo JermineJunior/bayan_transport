@@ -47,7 +47,7 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::authenticateUsing(function (Request $request) {
             $login = $request->input(Fortify::username());
 
-            $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
+            $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
             $request->merge([$field => $login]);
 
@@ -109,7 +109,9 @@ class FortifyServiceProvider extends ServiceProvider
         RateLimiter::for('two-factor', fn (Request $request) => Limit::perMinute(5)->by($request->session()->get('login.id')));
 
         RateLimiter::for('login', function (Request $request) {
-            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
+            $login = $request->input(Fortify::username());
+            $loginField = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+            $throttleKey = Str::transliterate(Str::lower($request->input($loginField)).'|'.$request->ip());
 
             return Limit::perMinute(5)->by($throttleKey);
         });

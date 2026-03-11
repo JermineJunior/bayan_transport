@@ -23,14 +23,14 @@ class OrderController extends Controller
             ->with(['customer', 'driver', 'warehouse']);
 
         if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('company', 'like', "%{$search}%")
-                    ->orWhere('destination', 'like', "%{$search}%")
-                    ->orWhereHas('customer', function ($customerQuery) use ($search) {
-                        $customerQuery->where('name', 'like', "%{$search}%");
+            $query->where(function ($q) use ($search): void {
+                $q->where('company', 'like', sprintf('%%%s%%', $search))
+                    ->orWhere('destination', 'like', sprintf('%%%s%%', $search))
+                    ->orWhereHas('customer', function ($customerQuery) use ($search): void {
+                        $customerQuery->where('name', 'like', sprintf('%%%s%%', $search));
                     })
-                    ->orWhereHas('warehouse', function ($warehouseQuery) use ($search) {
-                        $warehouseQuery->where('name', 'like', "%{$search}%");
+                    ->orWhereHas('warehouse', function ($warehouseQuery) use ($search): void {
+                        $warehouseQuery->where('name', 'like', sprintf('%%%s%%', $search));
                     });
             });
         }

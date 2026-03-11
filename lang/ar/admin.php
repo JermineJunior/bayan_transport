@@ -8,13 +8,17 @@ return [
     'login' => 'تسجيل الدخول',
     'logout' => 'تسجيل الخروج',
     'register' => 'إنشاء حساب',
+    'enter_details_below' => 'أدخل بياناتك أدناه لإنشاء حسابك',
     'email' => 'البريد الإلكتروني',
+    'username' => 'اسم المستخدم',
     'password' => 'كلمة المرور',
     'confirm_password' => 'تأكيد كلمة المرور',
+    'full_name' => 'الاسم الكامل',
     'remember_me' => 'تذكرني',
     'forgot_password' => 'نسيت كلمة المرور؟',
     'reset_password' => 'إعادة تعيين كلمة المرور',
     'send_reset_link' => 'إرسال رابط إعادة التعيين',
+    'already_have_account' => 'لديك حساب بالفعل؟',
 
     // Profile
     'profile' => 'الملف الشخصي',

@@ -30,8 +30,8 @@ class StoreOrderRequest extends FormRequest
             'tax' => ['nullable', 'numeric', 'min:0'],
             'commission' => ['nullable', 'numeric', 'min:0'],
             'amount' => ['nullable', 'numeric', 'min:0'],
-            'company' => ['nullable', 'string', 'max:255'],
-            'destination' => ['nullable', 'string', 'max:255'],
+            'company' => ['nullable', 'string', 'min:3', 'max:255'],
+            'destination' => ['nullable', 'string', 'min:3', 'max:255'],
         ];
     }
 }

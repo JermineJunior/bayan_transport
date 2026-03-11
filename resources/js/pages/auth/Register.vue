@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
+import { Form, Head, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
@@ -9,12 +10,17 @@ import { Spinner } from '@/components/ui/spinner';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { login } from '@/routes';
 import { store } from '@/routes/register';
+
+const page = usePage<{ translations?: Record<string, string> }>();
+const t = computed(() => page.props.translations ?? {});
 </script>
 
 <template>
     <AuthBase
-        title="Create an account"
-        description="Enter your details below to create your account"
+        :title="t.register || 'إنشاء حساب'"
+        :description="
+            t.enter_details_below || 'أدخل بياناتك أدناه لإنشاء حسابك'
+        "
     >
         <Head title="Register" />
 
@@ -26,7 +32,7 @@ import { store } from '@/routes/register';
         >
             <div class="grid gap-6">
                 <div class="grid gap-2">
-                    <Label for="name">Name</Label>
+                    <Label for="name">{{ t.name || 'الاسم' }}</Label>
                     <Input
                         id="name"
                         type="text"
@@ -35,18 +41,36 @@ import { store } from '@/routes/register';
                         :tabindex="1"
                         autocomplete="name"
                         name="name"
-                        placeholder="Full name"
+                        :placeholder="t.full_name || 'الاسم الكامل'"
                     />
                     <InputError :message="errors.name" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="email">Email address</Label>
+                    <Label for="username">{{
+                        t.username || 'اسم المستخدم'
+                    }}</Label>
+                    <Input
+                        id="username"
+                        type="text"
+                        required
+                        :tabindex="2"
+                        autocomplete="username"
+                        name="username"
+                        :placeholder="t.username || 'اسم المستخدم'"
+                    />
+                    <InputError :message="errors.username" />
+                </div>
+
+                <div class="grid gap-2">
+                    <Label for="email">{{
+                        t.email || 'البريد الإلكتروني'
+                    }}</Label>
                     <Input
                         id="email"
                         type="email"
                         required
-                        :tabindex="2"
+                        :tabindex="3"
                         autocomplete="email"
                         name="email"
                         placeholder="email@example.com"
@@ -55,29 +79,33 @@ import { store } from '@/routes/register';
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password">Password</Label>
+                    <Label for="password">{{
+                        t.password || 'كلمة المرور'
+                    }}</Label>
                     <Input
                         id="password"
                         type="password"
                         required
-                        :tabindex="3"
+                        :tabindex="4"
                         autocomplete="new-password"
                         name="password"
-                        placeholder="Password"
+                        :placeholder="t.password || 'كلمة المرور'"
                     />
                     <InputError :message="errors.password" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password_confirmation">Confirm password</Label>
+                    <Label for="password_confirmation">{{
+                        t.confirm_password || 'تأكيد كلمة المرور'
+                    }}</Label>
                     <Input
                         id="password_confirmation"
                         type="password"
                         required
-                        :tabindex="4"
+                        :tabindex="5"
                         autocomplete="new-password"
                         name="password_confirmation"
-                        placeholder="Confirm password"
+                        :placeholder="t.confirm_password || 'تأكيد كلمة المرور'"
                     />
                     <InputError :message="errors.password_confirmation" />
                 </div>
@@ -85,22 +113,22 @@ import { store } from '@/routes/register';
                 <Button
                     type="submit"
                     class="mt-2 w-full"
-                    tabindex="5"
+                    tabindex="6"
                     :disabled="processing"
                     data-test="register-user-button"
                 >
                     <Spinner v-if="processing" />
-                    Create account
+                    {{ t.register || 'إنشاء حساب' }}
                 </Button>
             </div>
 
             <div class="text-center text-sm text-muted-foreground">
-                Already have an account?
+                {{ t.already_have_account || 'لديك حساب بالفعل؟' }}
                 <TextLink
                     :href="login()"
                     class="underline underline-offset-4"
-                    :tabindex="6"
-                    >Log in</TextLink
+                    :tabindex="7"
+                    >{{ t.login || 'تسجيل الدخول' }}</TextLink
                 >
             </div>
         </Form>

@@ -54,6 +54,59 @@ return [
     'string' => 'يجب أن يكون :attribute سلسلة.',
     'unique' => 'تم اتخاذ :attribute بالفعل.',
     'url' => 'تنسيق :attribute غير صالح.',
-    'custom' => [],
-    'attributes' => [],
+    'custom' => [
+        'order_number' => [
+            'unique' => 'رقم الطلب :input مستخدم بالفعل.',
+        ],
+    ],
+    'attributes' => [
+        // Auth
+        'name' => 'الاسم',
+        'username' => 'اسم المستخدم',
+        'email' => 'البريد الإلكتروني',
+        'password' => 'كلمة المرور',
+        'password_confirmation' => 'تأكيد كلمة المرور',
+        'current_password' => 'كلمة المرور الحالية',
+        'new_password' => 'كلمة المرور الجديدة',
+        'remember' => 'تذكرني',
+
+        // Common
+        'first_name' => 'الاسم الأول',
+        'last_name' => 'اسم العائلة',
+        'phone' => 'رقم الهاتف',
+        'phone_2' => 'رقم الهاتف الثاني',
+        'address' => 'العنوان',
+        'is_active' => 'الحالة',
+        'note' => 'ملاحظة',
+
+        // Customer
+        'customer_id' => 'العميل',
+
+        // Driver
+        'driver_id' => 'السائق',
+
+        // Warehouse
+        'warehouse_id' => 'المستودع',
+
+        // Order
+        'date' => 'التاريخ',
+        'order_number' => 'رقم الطلب',
+        'car_number' => 'رقم السيارة',
+        'gasoline' => 'البنزين',
+        'benzin' => 'البنزين',
+        'fleet' => 'الأسطول',
+        'transit' => 'الترانزيت',
+        'window_fee' => 'رسوم النافذة',
+        'manfisto' => 'المانيفستو',
+        'freightage' => 'الأجرة',
+        'tax' => 'الضريبة',
+        'commission' => 'العمولة',
+        'amount' => 'المبلغ',
+        'company' => 'الشركة',
+        'destination' => 'الوجهة',
+
+        // General Settings
+        'location' => 'الموقع',
+        'logo' => 'الشعار',
+    ],
 ];

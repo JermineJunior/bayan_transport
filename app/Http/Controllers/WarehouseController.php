@@ -29,7 +29,7 @@ class WarehouseController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:warehouses,name'],
+            'name' => ['required', 'min:3', 'string', 'max:255', 'unique:warehouses,name'],
             'is_active' => ['nullable', 'boolean'],
         ]);
 
