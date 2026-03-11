@@ -58,7 +58,7 @@ const printReport = () => {
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="space-y-6 print:space-y-4">
             <!-- Print Header -->
-            <div class="hidden print:block">
+            <div>
                 <img
                     src="/image/reports/report_header.png"
                     class="mb-4 w-full object-contain"
@@ -323,7 +323,7 @@ const printReport = () => {
         </div>
 
         <!-- Print Footer -->
-        <div class="hidden print:block">
+        <div>
             <img
                 src="/image/reports/report_footer.png"
                 class="mt-4 w-full object-contain"
