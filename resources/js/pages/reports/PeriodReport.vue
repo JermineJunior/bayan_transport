@@ -59,17 +59,9 @@ function print() {
                     class="mb-4 w-full object-contain"
                     alt="Report Header"
                 />
-                <div class="flex items-center justify-center gap-4">
-                    <img
-                        v-if="settings.logo"
-                        :src="`/image/logo/${settings.logo}`"
-                        class="h-20 w-20 object-contain print:h-16 print:w-16"
-                        alt="logo"
-                    />
-                    <div class="text-center">
-                        <h1 class="text-xl font-bold">{{ settings.name }}</h1>
-                        <p class="text-sm font-semibold">تقرير الفترة</p>
-                    </div>
+                <div class="text-center">
+                    <h1 class="text-xl font-bold">{{ settings.name }}</h1>
+                    <p class="text-sm font-semibold">تقرير الفترة</p>
                 </div>
                 <p
                     v-if="filters.start_date || filters.end_date"
@@ -98,12 +90,6 @@ function print() {
                 class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
             >
                 <div class="flex items-center gap-2">
-                    <img
-                        v-if="settings.logo"
-                        :src="`/image/logo/${settings.logo}`"
-                        class="h-14 w-14 object-contain"
-                        alt="logo"
-                    />
                     <div>
                         <h1 class="text-2xl font-bold">تقرير الفترة</h1>
                         <p

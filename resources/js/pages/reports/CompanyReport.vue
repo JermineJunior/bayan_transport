@@ -109,12 +109,6 @@ const printReport = () => {
                             {{ settings.note }}
                         </p>
                     </div>
-                    <img
-                        v-if="settings.logo"
-                        :src="`/image/logo/${settings.logo}`"
-                        class="ms-auto h-20 w-20 object-contain print:h-16 print:w-16"
-                        alt="logo"
-                    />
                 </div>
                 <div class="px-6 pb-6 print:px-4 print:pb-4">
                     <div
@@ -317,15 +311,15 @@ const printReport = () => {
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Print Footer -->
-        <div>
-            <img
-                src="/image/reports/report_footer.png"
-                class="mt-4 w-full object-contain"
-                alt="Report Footer"
-            />
+            <!-- Print Footer -->
+            <div>
+                <img
+                    src="/image/reports/report_footer.png"
+                    class="mt-4 w-full object-contain"
+                    alt="Report Footer"
+                />
+            </div>
         </div>
     </AppLayout>
 </template>
