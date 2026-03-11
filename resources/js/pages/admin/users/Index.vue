@@ -1,19 +1,17 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
-import type { BreadcrumbItem } from '@/types';
-import AppLayout from '@/layouts/AppLayout.vue';
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+    Eye,
+    Pencil,
+    Trash2,
+    Plus,
+    User,
+    Mail,
+    Building2,
+} from 'lucide-vue-next';
+import { ref } from 'vue';
 import { Button } from '@/components/ui/button';
-import Pagination from '@/components/ui/pagination/Pagination.vue';
 import {
     Dialog,
     DialogClose,
@@ -26,15 +24,17 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import Pagination from '@/components/ui/pagination/Pagination.vue';
 import {
-    Eye,
-    Pencil,
-    Trash2,
-    Plus,
-    User,
-    Mail,
-    Building2,
-} from 'lucide-vue-next';
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import AppLayout from '@/layouts/AppLayout.vue';
+import type { BreadcrumbItem } from '@/types';
 
 interface Branch {
     id: number;

@@ -4,8 +4,8 @@ import { computed } from 'vue';
 import AppearanceTabs from '@/components/AppearanceTabs.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
-import { type BreadcrumbItem } from '@/types';
 import { edit } from '@/routes/appearance';
+import { type BreadcrumbItem } from '@/types';
 
 const page = usePage<{ translations?: Record<string, string> }>();
 const t = computed(() => page.props.translations ?? {});

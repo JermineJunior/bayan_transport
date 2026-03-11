@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
 import { Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import { Separator } from '@/components/ui/separator';
 import { useCurrentUrl } from '@/composables/useCurrentUrl';
 import { toUrl } from '@/lib/utils';
-import { type NavItem } from '@/types';
 import { edit as editAppearance } from '@/routes/appearance';
 import { edit as editProfile } from '@/routes/profile';
 import { show } from '@/routes/two-factor';
 import { edit as editPassword } from '@/routes/user-password';
+import { type NavItem } from '@/types';
 
 const page = usePage<{ translations?: Record<string, string> }>();
 const t = computed(() => page.props.translations ?? {});

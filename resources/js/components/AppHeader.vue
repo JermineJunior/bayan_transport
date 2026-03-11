@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import { Menu, Search, Maximize, Sun } from 'lucide-vue-next';
-import type { BreadcrumbItem } from '@/types';
+import { computed } from 'vue';
 import { dashboard, logout } from '@/routes';
 import { edit as profileEdit } from '@/routes/profile';
+import type { BreadcrumbItem } from '@/types';
 
 type Props = {
     breadcrumbs?: BreadcrumbItem[];

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import { title } from 'process';
 import { Link, usePage } from '@inertiajs/vue3';
 import {
     Settings,
@@ -17,11 +17,11 @@ import {
     FileText,
     BookMarked,
 } from 'lucide-vue-next';
+import { ref, computed, onMounted, watch } from 'vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { dashboard, logout } from '@/routes';
 import { edit as profileEdit } from '@/routes/profile';
 import type { BreadcrumbItem } from '@/types';
-import { title } from 'process';
 
 type Props = {
     breadcrumbs?: BreadcrumbItem[];

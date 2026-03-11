@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import { router } from '@inertiajs/vue3';
-import type { BreadcrumbItem } from '@/types';
-import AppLayout from '@/layouts/AppLayout.vue';
+import { FileText, Calendar, User } from 'lucide-vue-next';
+import { ref } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { FileText, Calendar, User } from 'lucide-vue-next';
+import AppLayout from '@/layouts/AppLayout.vue';
+import type { BreadcrumbItem } from '@/types';
 
 interface Customer {
     id: number;

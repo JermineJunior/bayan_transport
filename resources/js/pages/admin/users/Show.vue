@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import type { BreadcrumbItem } from '@/types';
-import AppLayout from '@/layouts/AppLayout.vue';
-import { Button } from '@/components/ui/button';
 import {
     ArrowRight,
     User,
@@ -11,6 +8,9 @@ import {
     Shield,
     Calendar,
 } from 'lucide-vue-next';
+import { Button } from '@/components/ui/button';
+import AppLayout from '@/layouts/AppLayout.vue';
+import type { BreadcrumbItem } from '@/types';
 
 interface Branch {
     id: number;

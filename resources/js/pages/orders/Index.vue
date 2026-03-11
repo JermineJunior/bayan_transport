@@ -1,20 +1,6 @@
 <script setup lang="ts">
 import { router } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
-import type { BreadcrumbItem } from '@/types';
-import AppLayout from '@/layouts/AppLayout.vue';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import Pagination from '@/components/ui/pagination/Pagination.vue';
 import {
     Eye,
     Plus,
@@ -23,6 +9,20 @@ import {
     Search,
     Package,
 } from 'lucide-vue-next';
+import { ref, watch } from 'vue';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import Pagination from '@/components/ui/pagination/Pagination.vue';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import AppLayout from '@/layouts/AppLayout.vue';
+import type { BreadcrumbItem } from '@/types';
 
 interface Order {
     id: number;

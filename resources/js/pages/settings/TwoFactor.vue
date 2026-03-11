@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Form, Head, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
 import { ShieldBan, ShieldCheck } from 'lucide-vue-next';
+import { computed } from 'vue';
 import { onUnmounted, ref } from 'vue';
 import TwoFactorRecoveryCodes from '@/components/TwoFactorRecoveryCodes.vue';
 import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.vue';
@@ -10,8 +10,8 @@ import { Button } from '@/components/ui/button';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
-import type { BreadcrumbItem } from '@/types';
 import { disable, enable, show } from '@/routes/two-factor';
+import type { BreadcrumbItem } from '@/types';
 
 type Props = {
     requiresConfirmation?: boolean;

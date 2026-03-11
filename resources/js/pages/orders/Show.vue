@@ -1,15 +1,5 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import type { BreadcrumbItem } from '@/types';
-import AppLayout from '@/layouts/AppLayout.vue';
-import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
 import {
     ArrowLeft,
     Pencil,
@@ -22,6 +12,16 @@ import {
     MapPin,
     Building2,
 } from 'lucide-vue-next';
+import { Button } from '@/components/ui/button';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import AppLayout from '@/layouts/AppLayout.vue';
+import type { BreadcrumbItem } from '@/types';
 
 interface Order {
     id: number;

@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import { useForm } from '@inertiajs/vue3';
-import type { BreadcrumbItem } from '@/types';
-import AppLayout from '@/layouts/AppLayout.vue';
-import { Button } from '@/components/ui/button';
 import {
     ArrowRight,
     User,
@@ -12,6 +9,9 @@ import {
     Pencil,
     Trash2,
 } from 'lucide-vue-next';
+import { Button } from '@/components/ui/button';
+import AppLayout from '@/layouts/AppLayout.vue';
+import type { BreadcrumbItem } from '@/types';
 
 interface Customer {
     id: number;

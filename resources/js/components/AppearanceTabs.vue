@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Monitor, Moon, Sun } from 'lucide-vue-next';
 import { usePage } from '@inertiajs/vue3';
+import { Monitor, Moon, Sun } from 'lucide-vue-next';
 import { computed } from 'vue';
 import { useAppearance } from '@/composables/useAppearance';
 

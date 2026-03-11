@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { computed, watch } from 'vue';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
     Card,
     CardContent,
@@ -9,6 +7,8 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface Props {
     form: Record<string, any>;
@@ -60,7 +60,7 @@ watch(calculatedAmount, (newValue) => {
 
 const handleBlur = (field: string, event: Event) => {
     const target = event.target as HTMLInputElement;
-    let value = target.value.replace(/,/g, '');
+    const value = target.value.replace(/,/g, '');
     if (value) {
         const num = parseFloat(value);
         if (!isNaN(num)) {

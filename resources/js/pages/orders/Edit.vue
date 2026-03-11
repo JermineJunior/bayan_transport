@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
-import type { BreadcrumbItem } from '@/types';
-import AppLayout from '@/layouts/AppLayout.vue';
-import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-vue-next';
+import { Button } from '@/components/ui/button';
+import AppLayout from '@/layouts/AppLayout.vue';
+import type { BreadcrumbItem } from '@/types';
+import OrderAmountsSection from './partials/OrderAmountsSection.vue';
 import OrderInfoSection from './partials/OrderInfoSection.vue';
 import OrderPartiesSection from './partials/OrderPartiesSection.vue';
-import OrderAmountsSection from './partials/OrderAmountsSection.vue';
 
 interface Order {
     id: number;

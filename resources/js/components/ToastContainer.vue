@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { CheckCircle, XCircle, Info, X } from 'lucide-vue-next';
+import { ref, watch, onMounted } from 'vue';
 
 interface Toast {
     id: number;

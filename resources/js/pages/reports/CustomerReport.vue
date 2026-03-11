@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import type { BreadcrumbItem } from '@/types';
-import AppLayout from '@/layouts/AppLayout.vue';
-import { Button } from '@/components/ui/button';
 import {
     ArrowRight,
     FileText,
@@ -12,6 +9,9 @@ import {
     Coins,
     Printer,
 } from 'lucide-vue-next';
+import { Button } from '@/components/ui/button';
+import AppLayout from '@/layouts/AppLayout.vue';
+import type { BreadcrumbItem } from '@/types';
 
 interface GeneralSettings {
     name: string;
@@ -57,6 +57,15 @@ const printReport = () => {
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="space-y-6 print:space-y-4">
+            <!-- Print Header -->
+            <div class="hidden print:block">
+                <img
+                    src="/image/reports/report_header.png"
+                    class="mb-4 w-full object-contain"
+                    alt="Report Header"
+                />
+            </div>
+
             <!-- Header -->
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
@@ -311,6 +320,15 @@ const printReport = () => {
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Print Footer -->
+        <div class="hidden print:block">
+            <img
+                src="/image/reports/report_footer.png"
+                class="mt-4 w-full object-contain"
+                alt="Report Footer"
+            />
         </div>
     </AppLayout>
 </template>
