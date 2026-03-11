@@ -12,9 +12,9 @@ class GeneralSettingController extends Controller
     public function index()
     {
         $settings = GeneralSetting::query()->firstOrCreate(['id' => 1], [
-            'name' => 'أميركو العالمية المحدودة',
+            'name' => 'السيدابي مبارك عمر السيدابي للترحيلات',
             'location' => null,
-            'phone' => null,
+            'phone' => '0912711162',
             'phone_2' => null,
             'email' => null,
             'logo' => null,
@@ -39,7 +39,7 @@ class GeneralSettingController extends Controller
         ]);
 
         $settings = GeneralSetting::query()->firstOrCreate(['id' => 1], [
-            'name' => 'أميركو العالمية المحدودة',
+            'name' => 'السيدابي مبارك عمر السيدابي للترحيلات',
         ]);
 
         if ($request->hasFile('logo')) {

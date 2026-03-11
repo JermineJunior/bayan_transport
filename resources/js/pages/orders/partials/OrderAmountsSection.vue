@@ -81,6 +81,27 @@ const handleFocus = (field: string, event: Event) => {
     }
 };
 
+const formatNumber = (value: number): string => {
+    if (value === 0) return '';
+    return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    }).format(value);
+};
+
+watch(
+    () => props.form.freightage,
+    (newFreightage) => {
+        const freightageValue = parseNumber(newFreightage);
+        if (freightageValue > 0) {
+            const taxValue = (freightageValue * 20.5) / 100;
+            props.form.tax = formatNumber(taxValue);
+        } else {
+            props.form.tax = '';
+        }
+    },
+);
+
 const fields = [
     { key: 'gasoline', label: 'الجاز' },
     { key: 'benzin', label: 'البنزين' },
@@ -89,7 +110,7 @@ const fields = [
     { key: 'window_fee', label: 'رسوم النافذة' },
     { key: 'manfisto', label: 'المنفيستو' },
     { key: 'freightage', label: 'النولون' },
-    { key: 'tax', label: 'الضريبة' },
+    { key: 'tax', label: 'الضريبة (20.5%)', readonly: true },
     { key: 'commission', label: 'العمولة' },
     { key: 'amount', label: 'المبلغ الإجمالي', readonly: true },
 ];

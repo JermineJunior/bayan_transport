@@ -19,6 +19,8 @@ class ReportsController extends Controller
             'location' => '',
             'phone' => '',
             'email' => '',
+            'logo' => null,
+            'note' => '',
         ]);
     }
 

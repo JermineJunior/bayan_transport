@@ -13,12 +13,12 @@ class GeneralSettingSeeder extends Seeder
     public function run(): void
     {
         GeneralSetting::query()->firstOrCreate(['id' => 1], [
-            'name' => 'شركة بيان لتطوير الاعمال',
+            'name' => 'السيدابي مبارك عمر السيدابي للترحيلات',
             'location' => null,
-            'phone' => null,
+            'phone' => '0912711162',
             'phone_2' => null,
             'email' => null,
-            'logo' => null,
+            'logo' => 'logo.png',
             'note' => null,
         ]);
     }

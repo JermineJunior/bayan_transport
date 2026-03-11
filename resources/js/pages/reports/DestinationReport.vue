@@ -19,6 +19,7 @@ interface GeneralSettings {
     phone: string;
     email: string;
     logo: string | null;
+    note: string | null;
 }
 
 interface Props {
@@ -92,11 +93,17 @@ const printReport = () => {
                         <p class="text-sm text-muted-foreground print:text-xs">
                             {{ settings.phone }}
                         </p>
+                        <p
+                            v-if="settings.note"
+                            class="text-sm text-muted-foreground print:text-xs"
+                        >
+                            {{ settings.note }}
+                        </p>
                     </div>
                     <img
                         v-if="settings.logo"
                         :src="`/image/logo/${settings.logo}`"
-                        class="ms-auto h-16 w-16 object-contain print:h-12 print:w-12"
+                        class="ms-auto h-20 w-20 object-contain print:h-16 print:w-16"
                         alt="logo"
                     />
                 </div>

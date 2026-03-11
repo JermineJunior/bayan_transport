@@ -5,7 +5,6 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Button } from '@/components/ui/button';
 import {
     ArrowRight,
-    FileText,
     Calendar,
     Fuel,
     Gauge,
@@ -19,6 +18,7 @@ interface GeneralSettings {
     phone: string;
     email: string;
     logo: string | null;
+    note: string | null;
 }
 
 interface Props {
@@ -54,11 +54,21 @@ function print() {
         <div class="space-y-6 print:space-y-4">
             <!-- Print Header -->
             <div class="mb-4 hidden text-center print:block">
-                <h1 class="text-xl font-bold">{{ settings.name }}</h1>
-                <p class="text-sm font-semibold">تقرير الفترة</p>
+                <div class="flex items-center justify-center gap-4">
+                    <img
+                        v-if="settings.logo"
+                        :src="`/image/logo/${settings.logo}`"
+                        class="h-20 w-20 object-contain print:h-16 print:w-16"
+                        alt="logo"
+                    />
+                    <div class="text-center">
+                        <h1 class="text-xl font-bold">{{ settings.name }}</h1>
+                        <p class="text-sm font-semibold">تقرير الفترة</p>
+                    </div>
+                </div>
                 <p
                     v-if="filters.start_date || filters.end_date"
-                    class="text-xs text-muted-foreground"
+                    class="mt-2 text-xs text-muted-foreground"
                 >
                     <span v-if="filters.start_date && filters.end_date">
                         {{ filters.start_date }} إلى {{ filters.end_date }}
@@ -70,6 +80,12 @@ function print() {
                         >إلى {{ filters.end_date }}</span
                     >
                 </p>
+                <p
+                    v-if="settings.note"
+                    class="mt-2 text-sm text-muted-foreground"
+                >
+                    {{ settings.note }}
+                </p>
             </div>
 
             <!-- Header -->
@@ -77,8 +93,21 @@ function print() {
                 class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
             >
                 <div class="flex items-center gap-2">
-                    <FileText class="h-6 w-6 text-primary print:hidden" />
-                    <h1 class="text-2xl font-bold">تقرير الفترة</h1>
+                    <img
+                        v-if="settings.logo"
+                        :src="`/image/logo/${settings.logo}`"
+                        class="h-14 w-14 object-contain"
+                        alt="logo"
+                    />
+                    <div>
+                        <h1 class="text-2xl font-bold">تقرير الفترة</h1>
+                        <p
+                            v-if="settings.note"
+                            class="text-sm text-muted-foreground"
+                        >
+                            {{ settings.note }}
+                        </p>
+                    </div>
                 </div>
                 <div class="flex items-center gap-2">
                     <Button
@@ -121,34 +150,54 @@ function print() {
                 <table class="w-full text-sm print:text-xs">
                     <thead class="bg-muted/50 print:bg-gray-100">
                         <tr>
-                            <th class="p-2 text-right font-semibold print:p-1">
+                            <th
+                                class="p-2 text-right font-semibold whitespace-nowrap print:p-1"
+                            >
                                 #
                             </th>
-                            <th class="p-2 text-right font-semibold print:p-1">
+                            <th
+                                class="p-2 text-right font-semibold whitespace-nowrap print:p-1"
+                            >
                                 التاريخ
                             </th>
-                            <th class="p-2 text-right font-semibold print:p-1">
+                            <th
+                                class="p-2 text-right font-semibold whitespace-nowrap print:p-1"
+                            >
                                 رقم السيارة
                             </th>
-                            <th class="p-2 text-right font-semibold print:p-1">
+                            <th
+                                class="p-2 text-right font-semibold whitespace-nowrap print:p-1"
+                            >
                                 الشركة
                             </th>
-                            <th class="p-2 text-right font-semibold print:p-1">
+                            <th
+                                class="p-2 text-right font-semibold whitespace-nowrap print:p-1"
+                            >
                                 الوجهة
                             </th>
-                            <th class="p-2 text-right font-semibold print:p-1">
+                            <th
+                                class="p-2 text-end font-semibold whitespace-nowrap print:p-1"
+                            >
                                 بنزين
                             </th>
-                            <th class="p-2 text-right font-semibold print:p-1">
+                            <th
+                                class="p-2 text-end font-semibold whitespace-nowrap print:p-1"
+                            >
                                 جازولين
                             </th>
-                            <th class="p-2 text-right font-semibold print:p-1">
+                            <th
+                                class="p-2 text-end font-semibold whitespace-nowrap print:p-1"
+                            >
                                 مانفستو
                             </th>
-                            <th class="p-2 text-right font-semibold print:p-1">
-                                أجرة
+                            <th
+                                class="p-2 text-end font-semibold whitespace-nowrap print:p-1"
+                            >
+                                النولون
                             </th>
-                            <th class="p-2 text-right font-semibold print:p-1">
+                            <th
+                                class="p-2 text-end font-semibold whitespace-nowrap print:p-1"
+                            >
                                 المبلغ
                             </th>
                         </tr>
@@ -159,34 +208,54 @@ function print() {
                             :key="order.id"
                             class="border-b transition-colors hover:bg-muted/50 print:hover:bg-transparent"
                         >
-                            <td class="p-2 align-middle print:p-1">
+                            <td
+                                class="p-2 align-middle whitespace-nowrap print:p-1"
+                            >
                                 {{ index + 1 }}
                             </td>
-                            <td class="p-2 align-middle print:p-1">
+                            <td
+                                class="p-2 align-middle whitespace-nowrap print:p-1"
+                            >
                                 {{ order.date }}
                             </td>
-                            <td class="p-2 align-middle print:p-1">
+                            <td
+                                class="p-2 align-middle whitespace-nowrap print:p-1"
+                            >
                                 {{ order.car_number }}
                             </td>
-                            <td class="p-2 align-middle print:p-1">
+                            <td
+                                class="p-2 align-middle whitespace-nowrap print:p-1"
+                            >
                                 {{ order.company }}
                             </td>
-                            <td class="p-2 align-middle print:p-1">
+                            <td
+                                class="p-2 align-middle whitespace-nowrap print:p-1"
+                            >
                                 {{ order.destination }}
                             </td>
-                            <td class="p-2 text-end align-middle print:p-1">
+                            <td
+                                class="p-2 text-end align-middle whitespace-nowrap print:p-1"
+                            >
                                 {{ order.gasoline }}
                             </td>
-                            <td class="p-2 text-end align-middle print:p-1">
+                            <td
+                                class="p-2 text-end align-middle whitespace-nowrap print:p-1"
+                            >
                                 {{ order.benzin }}
                             </td>
-                            <td class="p-2 text-end align-middle print:p-1">
+                            <td
+                                class="p-2 text-end align-middle whitespace-nowrap print:p-1"
+                            >
                                 {{ order.manfisto }}
                             </td>
-                            <td class="p-2 text-end align-middle print:p-1">
+                            <td
+                                class="p-2 text-end align-middle whitespace-nowrap print:p-1"
+                            >
                                 {{ order.freightage }}
                             </td>
-                            <td class="p-2 text-end align-middle print:p-1">
+                            <td
+                                class="p-2 text-end align-middle whitespace-nowrap print:p-1"
+                            >
                                 {{ order.amount }}
                             </td>
                         </tr>
@@ -220,10 +289,10 @@ function print() {
                             <p
                                 class="text-sm text-muted-foreground print:text-xs"
                             >
-                                مجموع البنزين
+                                مجموع الجازولين
                             </p>
                             <p class="text-lg font-semibold print:text-sm">
-                                {{ totals.total_benzin }}
+                                {{ totals.total_gasoline }}
                             </p>
                         </div>
                     </div>
@@ -241,10 +310,10 @@ function print() {
                             <p
                                 class="text-sm text-muted-foreground print:text-xs"
                             >
-                                مجموع الجازولين
+                                مجموع البنزين
                             </p>
                             <p class="text-lg font-semibold print:text-sm">
-                                {{ totals.total_gasoline }}
+                                {{ totals.total_benzin }}
                             </p>
                         </div>
                     </div>
