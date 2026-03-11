@@ -209,6 +209,16 @@ const deleteCustomer = (id: number) => {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
+                        <TableRow v-if="props.customers.data.length === 0">
+                            <TableCell colspan="3" class="h-32 text-center">
+                                <div
+                                    class="flex flex-col items-center justify-center gap-2 text-muted-foreground"
+                                >
+                                    <User class="h-8 w-8" />
+                                    <p>لا يوجد عملاء</p>
+                                </div>
+                            </TableCell>
+                        </TableRow>
                         <TableRow
                             v-for="customer in props.customers.data"
                             :key="customer.id"

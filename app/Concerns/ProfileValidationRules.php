@@ -42,7 +42,7 @@ trait ProfileValidationRules
             'required',
             'string',
             'max:255',
-            'unique:users,username'.($userId ? ',' . $userId : ''),
+            'unique:users,username'.($userId ? ','.$userId : ''),
         ];
     }
 

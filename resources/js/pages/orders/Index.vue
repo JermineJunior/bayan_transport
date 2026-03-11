@@ -15,7 +15,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Pagination from '@/components/ui/pagination/Pagination.vue';
-import { Eye, Plus, ArrowUp, ArrowDown, Search } from 'lucide-vue-next';
+import {
+    Eye,
+    Plus,
+    ArrowUp,
+    ArrowDown,
+    Search,
+    Package,
+} from 'lucide-vue-next';
 
 interface Order {
     id: number;
@@ -312,6 +319,16 @@ const formatAmount = (amount: number | null) => {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
+                        <TableRow v-if="props.orders.data.length === 0">
+                            <TableCell colspan="19" class="h-32 text-center">
+                                <div
+                                    class="flex flex-col items-center justify-center gap-2 text-muted-foreground"
+                                >
+                                    <Package class="h-8 w-8" />
+                                    <p>لا يوجد طلبات</p>
+                                </div>
+                            </TableCell>
+                        </TableRow>
                         <TableRow
                             v-for="order in props.orders.data"
                             :key="order.id"

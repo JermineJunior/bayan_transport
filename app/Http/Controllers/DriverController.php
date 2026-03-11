@@ -29,7 +29,7 @@ class DriverController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'name' => ['required', 'string','min:3', 'max:255', 'unique:drivers,name'],
+            'name' => ['required', 'string', 'min:3', 'max:255', 'unique:drivers,name'],
             'phone' => ['nullable', 'string', 'max:20'],
         ]);
 

@@ -203,12 +203,22 @@ const deleteDriver = (id: number) => {
                             <TableHead class="font-semibold"
                                 >رقم الهاتف</TableHead
                             >
-                            <TableHead class="text-left  font-semibold"
+                            <TableHead class="text-left font-semibold"
                                 >الإجراءات</TableHead
                             >
                         </TableRow>
                     </TableHeader>
                     <TableBody>
+                        <TableRow v-if="props.drivers.data.length === 0">
+                            <TableCell colspan="3" class="h-32 text-center">
+                                <div
+                                    class="flex flex-col items-center justify-center gap-2 text-muted-foreground"
+                                >
+                                    <User class="h-8 w-8" />
+                                    <p>لا يوجد سائقين</p>
+                                </div>
+                            </TableCell>
+                        </TableRow>
                         <TableRow
                             v-for="driver in props.drivers.data"
                             :key="driver.id"

@@ -207,6 +207,16 @@ const deleteWarehouse = (id: number) => {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
+                        <TableRow v-if="props.warehouses.data.length === 0">
+                            <TableCell colspan="3" class="h-32 text-center">
+                                <div
+                                    class="flex flex-col items-center justify-center gap-2 text-muted-foreground"
+                                >
+                                    <Warehouse class="h-8 w-8" />
+                                    <p>لا يوجد مستودعات</p>
+                                </div>
+                            </TableCell>
+                        </TableRow>
                         <TableRow
                             v-for="warehouse in props.warehouses.data"
                             :key="warehouse.id"

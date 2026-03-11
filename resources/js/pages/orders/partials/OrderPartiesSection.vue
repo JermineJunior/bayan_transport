@@ -85,7 +85,7 @@ const saveWarehouse = () => {
 <template>
     <Card>
         <CardHeader>
-            <CardTitle>الطرافاء</CardTitle>
+            <CardTitle>الاطراف والمستودعات</CardTitle>
             <CardDescription>معلومات العميل والسائق والمستودع</CardDescription>
         </CardHeader>
         <CardContent class="space-y-4">
