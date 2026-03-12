@@ -40,7 +40,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-        @vite(['resources/js/app.ts', "resources/js/pages/{$page['component']}.vue"])
+        @vite(['resources/css/app.css', "resources/js/app.ts"])
         @inertiaHead
     </head>
     <body class="font-sans antialiased" style="font-family: 'Cairo', sans-serif;">
