@@ -16,6 +16,7 @@ import {
     Truck,
     FileText,
     BookMarked,
+    DollarSign,
 } from 'lucide-vue-next';
 import { ref, computed, onMounted, watch } from 'vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
@@ -133,13 +134,21 @@ const sidebarNavItems = [
         items: [{ title: 'الترحيلات', href: '/orders' }],
     },
     {
+        title: 'المدفوعات',
+        icon: DollarSign,
+        items: [{ title: 'سجل المدفوعات', href: '/payments' }],
+    },
+    {
         title: 'التقارير',
         icon: FileText,
         items: [
             { title: 'تقرير الترحيلات حسب الفترة', href: '/reports/period' },
             { title: 'تقرير الترحيلات حسب العميل', href: '/reports/customer' },
             { title: 'تقرير الترحيلات حسب السائق', href: '/reports/driver' },
-            { title: 'تقرير الترحيلات حسب الوجهة', href: '/reports/destination' },
+            {
+                title: 'تقرير الترحيلات حسب الوجهة',
+                href: '/reports/destination',
+            },
             { title: 'تقرير  الترحيلات حسب الشركة', href: '/reports/company' },
         ],
     },

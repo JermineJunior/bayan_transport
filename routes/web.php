@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DriverController;
@@ -24,6 +25,10 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::resource('drivers', DriverController::class)->names('drivers');
     Route::resource('warehouses', WarehouseController::class)->names('warehouses');
     Route::resource('orders', OrderController::class)->names('orders');
+    // payments
+    Route::get('payments/create/{order}', [PaymentController::class, 'create'])->name('payments.create');
+    Route::post('payments', [PaymentController::class, 'store'])->name('payments.store');
+    Route::get('payments', [PaymentController::class, 'index'])->name('payments.index');
     // order reports
     Route::prefix('reports')->group(function (): void {
         Route::get('customer', [ReportsController::class, 'customerIndex'])->name('reports.customer.index');

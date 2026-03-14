@@ -11,7 +11,10 @@ import {
     Car,
     MapPin,
     Building2,
+    DollarSign,
+    Plus,
 } from 'lucide-vue-next';
+import { computed } from 'vue';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -22,6 +25,13 @@ import {
 } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
+
+interface Payment {
+    id: number;
+    amount_paid: number;
+    date: string;
+    notes: string | null;
+}
 
 interface Order {
     id: number;
@@ -43,6 +53,7 @@ interface Order {
     customer: { id: number; name: string } | null;
     driver: { id: number; name: string; phone: string | null } | null;
     warehouse: { id: number; name: string } | null;
+    payments: Payment[];
     created_at: string;
     updated_at: string;
 }
@@ -52,6 +63,16 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+
+const totalPaid = computed(() => {
+    return (
+        props.order.payments?.reduce((sum, p) => sum + p.amount_paid, 0) || 0
+    );
+});
+
+const remaining = computed(() => {
+    return props.order.amount - totalPaid.value;
+});
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'الرئيسية', href: '/dashboard' },
@@ -295,13 +316,137 @@ const formatDateTime = (date: string) => {
                             <div
                                 class="rounded-lg border border-primary bg-primary/5 p-4"
                             >
-                                <div class="text-sm text-primary">
-                                    المبلغ
-                                </div>
+                                <div class="text-sm text-primary">المبلغ</div>
                                 <div class="text-2xl font-bold text-primary">
                                     {{ formatAmount(props.order.amount) }}
                                 </div>
                             </div>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <div class="flex items-center justify-between">
+                            <CardTitle class="flex items-center gap-2">
+                                <DollarSign class="h-5 w-5" />
+                                المدفوعات
+                            </CardTitle>
+                            <Link :href="`/payments/create/${props.order.id}`">
+                                <Button size="sm" class="gap-1">
+                                    <Plus class="h-4 w-4" />
+                                    إضافة دفعة
+                                </Button>
+                            </Link>
+                        </div>
+                        <CardDescription>
+                            متابعة المدفوعات والمتبقي للطلب
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div class="grid gap-4 md:grid-cols-3">
+                            <div class="rounded-lg border bg-muted/50 p-4">
+                                <div class="text-sm text-muted-foreground">
+                                    المبلغ الإجمالي
+                                </div>
+                                <div class="text-xl font-bold">
+                                    {{ formatAmount(props.order.amount) }}
+                                </div>
+                            </div>
+                            <div class="rounded-lg border bg-green-50 p-4">
+                                <div class="text-sm text-green-600">
+                                    المدفوع
+                                </div>
+                                <div class="text-xl font-bold text-green-700">
+                                    {{ formatAmount(totalPaid) }}
+                                </div>
+                            </div>
+                            <div
+                                class="rounded-lg border p-4"
+                                :class="
+                                    remaining > 0 ? 'bg-red-50' : 'bg-green-50'
+                                "
+                            >
+                                <div
+                                    class="text-sm"
+                                    :class="
+                                        remaining > 0
+                                            ? 'text-red-600'
+                                            : 'text-green-600'
+                                    "
+                                >
+                                    المتبقي
+                                </div>
+                                <div
+                                    class="text-xl font-bold"
+                                    :class="
+                                        remaining > 0
+                                            ? 'text-red-700'
+                                            : 'text-green-700'
+                                    "
+                                >
+                                    {{ formatAmount(remaining) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            v-if="
+                                props.order.payments &&
+                                props.order.payments.length > 0
+                            "
+                            class="mt-4"
+                        >
+                            <h4 class="mb-3 font-medium">سجل المدفوعات</h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr class="border-b text-right">
+                                            <th class="pb-2 font-medium">
+                                                التاريخ
+                                            </th>
+                                            <th class="pb-2 font-medium">
+                                                المبلغ
+                                            </th>
+                                            <th class="pb-2 font-medium">
+                                                ملاحظات
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            v-for="payment in props.order
+                                                .payments"
+                                            :key="payment.id"
+                                            class="border-b"
+                                        >
+                                            <td class="py-2">
+                                                {{ formatDate(payment.date) }}
+                                            </td>
+                                            <td
+                                                class="py-2 font-medium text-green-600"
+                                            >
+                                                {{
+                                                    formatAmount(
+                                                        payment.amount_paid,
+                                                    )
+                                                }}
+                                            </td>
+                                            <td
+                                                class="py-2 text-muted-foreground"
+                                            >
+                                                {{ payment.notes || '-' }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div
+                            v-else
+                            class="mt-4 text-center text-muted-foreground"
+                        >
+                            لا توجد دفعات مسجلة
                         </div>
                     </CardContent>
                 </Card>
