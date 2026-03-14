@@ -181,12 +181,7 @@ const printReport = () => {
                                 <th
                                     class="h-12 px-4 text-end align-middle font-medium text-muted-foreground print:h-8 print:p-2"
                                 >
-                                    المنفيستو
-                                </th>
-                                <th
-                                    class="h-12 px-4 text-end align-middle font-medium text-muted-foreground print:h-8 print:p-2"
-                                >
-                                    النولون
+                                اسم السائق
                                 </th>
                                 <th
                                     class="h-12 px-4 text-end align-middle font-medium text-muted-foreground print:h-8 print:p-2"
@@ -223,10 +218,7 @@ const printReport = () => {
                                     {{ order.benzin }}
                                 </td>
                                 <td class="p-4 text-end align-middle print:p-2">
-                                    {{ order.manfisto }}
-                                </td>
-                                <td class="p-4 text-end align-middle print:p-2">
-                                    {{ order.freightage }}
+                                    {{ order.driver.name }}
                                 </td>
                                 <td class="p-4 text-end align-middle print:p-2">
                                     {{ order.amount }}

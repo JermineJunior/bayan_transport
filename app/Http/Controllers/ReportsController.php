@@ -65,7 +65,7 @@ class ReportsController extends Controller
             $query->where('date', '<=', $endDate);
         }
 
-        $orders = $query->orderBy('date', 'desc')->get();
+        $orders = $query->orderBy('date', 'desc')->with('driver')->get();
         $totalAmount = $orders->sum('amount');
         $totalFreightage = $orders->sum('freightage');
         $totalTax = $orders->sum('tax');

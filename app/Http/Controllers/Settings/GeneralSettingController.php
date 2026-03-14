@@ -47,6 +47,8 @@ class GeneralSettingController extends Controller
             $logoName = time().'.'.$logo->getClientOriginalExtension();
             $logo->move(public_path('image/logo'), $logoName);
             $validated['logo'] = $logoName;
+        } else {
+            unset($validated['logo']);
         }
 
         $settings->update($validated);
