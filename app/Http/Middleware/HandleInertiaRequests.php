@@ -41,7 +41,7 @@ class HandleInertiaRequests extends Middleware
         $translations = include lang_path('ar/admin.php');
 
         $generalSettings = cache()->rememberForever('general_settings', fn () => GeneralSetting::query()->first()) ?? new GeneralSetting([
-           'name' => 'السيدابي مبارك عمر السيدابي للترحيلات',
+            'name' => 'السيدابي مبارك عمر السيدابي للترحيلات',
             'location' => null,
             'phone' => '0912711162',
             'phone_2' => null,

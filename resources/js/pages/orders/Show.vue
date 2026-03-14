@@ -1,20 +1,15 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 import {
     ArrowLeft,
     Pencil,
     ClipboardList,
     User,
-    Truck,
-    Warehouse,
-    Calendar,
-    Car,
-    MapPin,
-    Building2,
     DollarSign,
     Plus,
+    Trash2,
 } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -23,6 +18,14 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 
@@ -63,15 +66,20 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
+// calculate the order total paid
 const totalPaid = computed(() => {
-    return (
-        props.order.payments?.reduce((sum, p) => sum + p.amount_paid, 0) || 0
+    if (!props.order.payments || !Array.isArray(props.order.payments)) {
+        return 0;
+    }
+    return props.order.payments.reduce(
+        (sum, p) => sum + Number(p.amount_paid || 0),
+        0,
     );
 });
 
 const remaining = computed(() => {
-    return props.order.amount - totalPaid.value;
+    const amount = Number(props.order.amount) ?? 0;
+    return amount - totalPaid.value;
 });
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -104,6 +112,22 @@ const formatDateTime = (date: string) => {
         hour: '2-digit',
         minute: '2-digit',
     });
+};
+
+const deleteDialogOpen = ref(false);
+const paymentToDelete = ref<number | null>(null);
+
+const confirmDelete = (paymentId: number) => {
+    paymentToDelete.value = paymentId;
+    deleteDialogOpen.value = true;
+};
+
+const deletePayment = () => {
+    if (paymentToDelete.value) {
+        router.delete(`/payments/${paymentToDelete.value}`);
+        deleteDialogOpen.value = false;
+        paymentToDelete.value = null;
+    }
 };
 </script>
 
@@ -332,7 +356,16 @@ const formatDateTime = (date: string) => {
                                 <DollarSign class="h-5 w-5" />
                                 المدفوعات
                             </CardTitle>
-                            <Link :href="`/payments/create/${props.order.id}`">
+                            <div
+                                v-if="remaining <= 0"
+                                class="rounded-md bg-green-100 px-3 py-1.5 text-sm font-medium text-green-700"
+                            >
+                                مخلص
+                            </div>
+                            <Link
+                                v-else
+                                :href="`/payments/create/${props.order.id}`"
+                            >
                                 <Button size="sm" class="gap-1">
                                     <Plus class="h-4 w-4" />
                                     إضافة دفعة
@@ -411,6 +444,9 @@ const formatDateTime = (date: string) => {
                                             <th class="pb-2 font-medium">
                                                 ملاحظات
                                             </th>
+                                            <th class="w-24 pb-2 font-medium">
+                                                إجراءات
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -437,6 +473,37 @@ const formatDateTime = (date: string) => {
                                             >
                                                 {{ payment.notes || '-' }}
                                             </td>
+                                            <td class="py-2">
+                                                <div class="flex gap-1">
+                                                    <Link
+                                                        :href="`/payments/${payment.id}/edit`"
+                                                    >
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            class="h-8 w-8"
+                                                        >
+                                                            <Pencil
+                                                                class="h-4 w-4"
+                                                            />
+                                                        </Button>
+                                                    </Link>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        class="h-8 w-8 text-red-500 hover:text-red-600"
+                                                        @click="
+                                                            confirmDelete(
+                                                                payment.id,
+                                                            )
+                                                        "
+                                                    >
+                                                        <Trash2
+                                                            class="h-4 w-4"
+                                                        />
+                                                    </Button>
+                                                </div>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -451,6 +518,29 @@ const formatDateTime = (date: string) => {
                     </CardContent>
                 </Card>
             </div>
+
+            <Dialog v-model:open="deleteDialogOpen">
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>حذف الدفعة</DialogTitle>
+                        <DialogDescription>
+                            هل أنت متأكد من حذف هذه الدفعة؟ لا يمكن التراجع عن
+                            هذا الإجراء.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button
+                            variant="outline"
+                            @click="deleteDialogOpen = false"
+                        >
+                            إلغاء
+                        </Button>
+                        <Button variant="destructive" @click="deletePayment">
+                            حذف
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     </AppLayout>
 </template>

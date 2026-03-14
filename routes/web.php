@@ -1,11 +1,11 @@
 <?php
 
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\Settings\GeneralSettingController;
 use App\Http\Controllers\WarehouseController;
@@ -27,6 +27,9 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::resource('orders', OrderController::class)->names('orders');
     // payments
     Route::get('payments/create/{order}', [PaymentController::class, 'create'])->name('payments.create');
+    Route::get('payments/{payment}/edit', [PaymentController::class, 'edit'])->name('payments.edit');
+    Route::put('payments/{payment}', [PaymentController::class, 'update'])->name('payments.update');
+    Route::delete('payments/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy');
     Route::post('payments', [PaymentController::class, 'store'])->name('payments.store');
     Route::get('payments', [PaymentController::class, 'index'])->name('payments.index');
     // order reports

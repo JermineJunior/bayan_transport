@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\GeneralSetting;
 use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\RedirectResponse;
@@ -12,6 +13,18 @@ use Inertia\Response;
 
 class PaymentController extends Controller
 {
+    private function getSettings()
+    {
+        return GeneralSetting::query()->first() ?? new GeneralSetting([
+            'name' => 'نظام الترحيلات',
+            'location' => '',
+            'phone' => '',
+            'email' => '',
+            'logo' => null,
+            'note' => '',
+        ]);
+    }
+
     public function create(Order $order): Response
     {
         $order->load(['customer', 'driver']);
@@ -70,8 +83,8 @@ class PaymentController extends Controller
 
         $payments = $payments->map(function ($payment) {
             $order = $payment->order;
-            $totalPaid = $order->payments()->sum('amount_paid');
-            $remaining = $order->amount - $totalPaid;
+            $totalPaid = $order->payments()->sum('amount_paid'); // calculate
+            $remaining = $order->amount - $totalPaid; // add to collection
 
             return [
                 'id' => $payment->id,
@@ -102,6 +115,7 @@ class PaymentController extends Controller
         return inertia('payments/Index', [
             'customers' => $customers,
             'payments' => $payments,
+            'settings' => $this->getSettings(),
             'filters' => [
                 'customer_id' => $customerId,
                 'start_date' => $this->formatDate($startDate),
@@ -118,5 +132,53 @@ class PaymentController extends Controller
     private function formatDate($date): ?string
     {
         return $date ? Date::parse($date)->format('Y-m-d') : null;
+    }
+
+    public function edit(Payment $payment): Response
+    {
+        $payment->load(['order.customer', 'order.driver']);
+        $order = $payment->order;
+
+        $otherPayments = $order->payments()
+            ->where('id', '!=', $payment->id)
+            ->orderBy('date', 'desc')
+            ->get();
+        $totalPaidOther = $otherPayments->sum('amount_paid');
+        $remaining = $order->amount - ($totalPaidOther + $payment->amount_paid);
+
+        return inertia('payments/Edit', [
+            'payment' => $payment,
+            'order' => $order,
+            'remaining' => $remaining,
+        ]);
+    }
+
+    public function update(Request $request, Payment $payment): RedirectResponse
+    {
+        $order = $payment->order;
+        $otherPayments = $order->payments()
+            ->where('id', '!=', $payment->id)
+            ->sum('amount_paid');
+        $maxAmount = $order->amount - $otherPayments;
+
+        $validated = $request->validate([
+            'amount_paid' => ['required', 'numeric', 'min:0.01', 'max:'.$maxAmount],
+            'date' => ['required', 'date'],
+            'notes' => ['nullable', 'string'],
+        ]);
+
+        $payment->update($validated);
+
+        return to_route('orders.show', $payment->order_id)
+            ->with('success', 'تم تحديث الدفعة بنجاح');
+    }
+
+    public function destroy(Payment $payment): RedirectResponse
+    {
+        $orderId = $payment->order_id;
+        $payment->delete();
+
+        return to_route('orders.show', $orderId)
+            ->with('success', 'تم حذف الدفعة بنجاح');
     }
 }
