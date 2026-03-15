@@ -17,6 +17,7 @@ import {
     FileText,
     BookMarked,
     DollarSign,
+    Users,
 } from 'lucide-vue-next';
 import { ref, computed, onMounted, watch } from 'vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
@@ -151,6 +152,11 @@ const sidebarNavItems = [
             },
             { title: 'تقرير  الترحيلات حسب الشركة', href: '/reports/company' },
         ],
+    },
+    {
+        title: 'المستخدمون',
+        icon: Users,
+        items: [{ title: 'قائمة المستخدمين', href: '/admin/users' }],
     },
     {
         title: 'الإعدادات العامة',

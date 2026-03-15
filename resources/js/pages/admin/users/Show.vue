@@ -7,6 +7,7 @@ import {
     Building2,
     Shield,
     Calendar,
+    UserCircle,
 } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -26,6 +27,7 @@ interface Role {
 interface User {
     id: number;
     name: string;
+    username: string;
     email: string;
     branch: Branch | null;
     roles: Role[];
@@ -85,6 +87,17 @@ const breadcrumbs: BreadcrumbItem[] = [
                                     الاسم
                                 </dt>
                                 <dd class="font-medium">{{ user.name }}</dd>
+                            </div>
+                            <div>
+                                <dt class="text-sm text-muted-foreground">
+                                    اسم المستخدم
+                                </dt>
+                                <dd class="flex items-center gap-2 font-medium">
+                                    <UserCircle
+                                        class="h-4 w-4 text-muted-foreground"
+                                    />
+                                    {{ user.username }}
+                                </dd>
                             </div>
                             <div>
                                 <dt class="text-sm text-muted-foreground">

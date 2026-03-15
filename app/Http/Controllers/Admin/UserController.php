@@ -18,7 +18,14 @@ class UserController extends Controller
 
         return Inertia::render('admin/users/Index', [
             'users' => $users,
+            'roles' => [],
+            'branches' => [],
         ]);
+    }
+
+    public function create(): Response
+    {
+        return Inertia::render('admin/users/Create');
     }
 
     public function show(User $user): Response
@@ -28,10 +35,18 @@ class UserController extends Controller
         ]);
     }
 
+    public function edit(User $user): Response
+    {
+        return Inertia::render('admin/users/Edit', [
+            'user' => $user,
+        ]);
+    }
+
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:255', 'unique:users,username'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8'],
 
@@ -39,6 +54,7 @@ class UserController extends Controller
 
         User::query()->create([
             'name' => $validated['name'],
+            'username' => $validated['username'],
             'email' => $validated['email'],
             'password' => $validated['password'],
 
@@ -51,19 +67,16 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->id)],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'password' => ['nullable', 'string', 'min:8'],
 
         ]);
 
         $user->update([
             'name' => $validated['name'],
+            'username' => $validated['username'],
             'email' => $validated['email'],
         ]);
-
-        if (! empty($validated['password'])) {
-            $user->update(['password' => $validated['password']]);
-        }
 
         return to_route('users.index');
     }
