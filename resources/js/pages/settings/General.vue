@@ -28,6 +28,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const form = useForm({
+    _method: 'PUT',
     name: props.settings.name || '',
     location: props.settings.location || '',
     phone: props.settings.phone || '',
@@ -36,6 +37,12 @@ const form = useForm({
     note: props.settings.note || '',
     logo: null as File | null,
 });
+
+function submit() {
+    form.post('/settings/general', {
+        forceFormData: true,
+    });
+}
 </script>
 
 <template>
@@ -45,10 +52,7 @@ const form = useForm({
         <div class="mx-auto max-w-2xl p-6">
             <h1 class="mb-6 text-2xl font-bold">الإعدادات العامة</h1>
 
-            <form
-                @submit.prevent="form.put('/settings/general')"
-                class="space-y-6"
-            >
+            <form @submit.prevent="submit" class="space-y-6">
                 <div class="grid gap-4 md:grid-cols-2">
                     <div class="space-y-2">
                         <Label for="name">اسم الشركة</Label>

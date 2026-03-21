@@ -177,14 +177,14 @@ const sidebarNavItems = [
         <!-- Sidebar -->
         <aside class="app-sidebar">
             <div class="main-sidebar-header">
-                <Link :href="dashboard()" class="desktop-logo logo-light">
-                    <img :src="logoUrl" class="main-logo" alt="logo" />
+                <Link :href="dashboard()" class="desktop-logo logo-light ">
+                    <img :src="logoUrl" class="w-full h-20px" alt="logo" />
                 </Link>
                 <Link
                     :href="dashboard()"
-                    class="logo-icon mobile-logo icon-light"
+                    class="logo-icon desktop-logo icon-light"
                 >
-                    <img :src="logoUrl" class="logo-icon" alt="logo" />
+                    <img :src="logoUrl" class="w-full" alt="logo" />
                 </Link>
             </div>
 
@@ -192,11 +192,11 @@ const sidebarNavItems = [
                 <div class="app-sidebar__user clearfix">
                     <div class="dropdown user-pro-body">
                         <div>
-                            <img
+                            <!-- <img
                                 :src="logoUrl"
                                 class="avatar avatar-xl brround"
                                 alt="user-img"
-                            />
+                            /> -->
                             <span
                                 class="avatar-status profile-status bg-green"
                             ></span>
